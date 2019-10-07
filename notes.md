@@ -16,3 +16,17 @@ Kysymyksiä:
 asenna softat:
 
 - anaconda, tensorflow, pytorch, onnx (runtime?)
+
+# 07.10.2019
+
+### Installs:
+
+- anaconda: anaconda.com, using .sh file
+- pytorch: conda install pytorch torchvision cudatoolkit=10.0
+- tensorflow: pip install tensorflow-gpu
+- onnx: conda install -c conda-forge onnx
+- onnx runtime: pip install onnxruntime (could also use pip for onnx..)
+
+### Notes
+
+how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?
