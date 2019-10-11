@@ -1,4 +1,4 @@
-## 03.10.2019
+# 03.10.2019
 
 Kysymyksiä:
 
@@ -27,6 +27,11 @@ asenna softat:
 - onnx: conda install -c conda-forge onnx
 - onnx runtime: pip install onnxruntime (could also use pip for onnx..)
 
+## 09.10.2019
+
+- Intel ngraph? onnx tyylinen? 'compiler'?
+- mittaa latency ja throughput?
+
 ## 10.10.2019
 
 - get latex base from Anton or Vesa? ones found with google had some errors.
@@ -53,5 +58,3 @@ benchmarking? https://pdfs.semanticscholar.org/c462/ad5a425a4d0fcee178758a6782e7
 ^ found by searching "onnx" on google scholar
 
 for research project: maybe something like a use case and then different ways of achieving it? for example for jetson, how to get our model on it and which is fastest? which is easiest to do? but nano is just a computer, everything works..? related: tensorRT? https://docs.nvidia.com/deeplearning/sdk/tensorrt-sample-support-guide/index.html#network_api_pytorch_mnist
-
-
