@@ -59,6 +59,16 @@ TODO: ?
 - https://pytorch.org/tutorials/intermediate/torchvision_tutorial.html
 - "this study uses two(or just one?) different object detection/segmentation models trained on CARLA dataset and measures the performance and accuracy when converted to ONNX? and using different ONNX translators (and using the target software) and runtime(s)? Also compares to native implementation?"
 
+## 15.10.2019
+
+- Problem with using ONNX on x86: might not be fair since pytorch and tf are so optimized for that platform already, while onnx could provide speed ups/even enable use at all on mobile or embedded systems?
+- mentioned already but more support for them: https://ai.facebook.com/blog/onnx-expansion-speeds-ai-development-/ . Hardware runtimes "such as NVIDIA’s TensorRT and Intel’s nGraph" (mostly for mobile? not sure)
+- https://cloudblogs.microsoft.com/opensource/2019/08/26/announcing-onnx-runtime-0-5-edge-hardware-acceleration-support/ "ONNX Runtime 0.5 with support for edge hardware acceleration", sounds relevant?
+- any good place to ask someone what problems they have with different platfors, maybe edge computing relating to ML?
+- IoT edge computing azure, aws?
+- concentrate on the self driving car (Steering, gas?), train model(s) on CARLA data, test? Jyris paper probably relevant here. <- for research project
+- different pratforms: intel integrated GPUs? (for dippa?)
+
 ### Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?
@@ -79,7 +89,7 @@ benchmarking? https://pdfs.semanticscholar.org/c462/ad5a425a4d0fcee178758a6782e7
 
 for research project: maybe something like a use case and then different ways of achieving it? for example for jetson, how to get our model on it and which is fastest? which is easiest to do? but nano is just a computer, everything works..? related: tensorRT? https://docs.nvidia.com/deeplearning/sdk/tensorrt-sample-support-guide/index.html#network_api_pytorch_mnist
 
-bigass article on object detection (only 2 months old): https://arxiv.org/pdf/1809.03193.pdf, newest reference from 2018 though?
+bigass article on object detection (only 2 months old, though it was just edited then): https://arxiv.org/pdf/1809.03193.pdf, newest reference from 2018 though?
 
 hmm: https://www.reddit.com/r/MachineLearning/comments/8pcqgj/p_3d_object_detection_for_autonomous_driving/
 hmm: https://www.reddit.com/r/MachineLearning/comments/a7iv7z/d_what_is_the_sota_for_3d_object_detection/
