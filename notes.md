@@ -66,8 +66,15 @@ TODO: ?
 - https://cloudblogs.microsoft.com/opensource/2019/08/26/announcing-onnx-runtime-0-5-edge-hardware-acceleration-support/ "ONNX Runtime 0.5 with support for edge hardware acceleration", sounds relevant?
 - any good place to ask someone what problems they have with different platfors, maybe edge computing relating to ML?
 - IoT edge computing azure, aws?
-- concentrate on the self driving car (Steering, gas?), train model(s) on CARLA data, test? Jyris paper probably relevant here. <- for research project
+- *concentrate on the self driving car (Steering, gas?), train model(s) on CARLA data, test? Jyris paper probably relevant here. <- for research project*
 - different pratforms: intel integrated GPUs? (for dippa?)
+
+## 17.10.2019
+
+- Taulukko/feature matriisi että mitä mitkäkin komponentit tekevät (tensorRT, openwino, onnx runtime jne.)
+    - ota lista eri työkaluista ja katso mitä ne osaa/mihin tarkoitukseen ne on. esim. inference, iGPU, CPU, mitä formaattia osaa, voiko train / design vai ei. 
+- esim tensorRT vain inferenssi. vs tensorflow, kumpi nopeampi?
+- throughput, latency, resurssien kulutus (muisti jne.) mittaa eri komponentteja etta missä mikin parempi. eri alustoja myös? esim. integratee gpu, jetson, jne.
 
 ### Notes
 
@@ -95,3 +102,14 @@ hmm: https://www.reddit.com/r/MachineLearning/comments/8pcqgj/p_3d_object_detect
 hmm: https://www.reddit.com/r/MachineLearning/comments/a7iv7z/d_what_is_the_sota_for_3d_object_detection/
 hmm: https://www.reddit.com/r/MachineLearning/comments/bb53uo/foveabox_beyond_anchorbased_object_detector/
 hmm: https://github.com/open-mmlab/mmdetection (toolbox for object detection, supports many sota implementations)
+
+https://developer.nvidia.com/drive/drive-networks <- many different approaches to nn self driving cars
+
+https://medium.com/syncedreview/deep-learning-in-real-time-inference-acceleration-and-continuous-training-17dac9438b0b <- some hardware stuff about inference optimization - also good point about models improving fast and the need to continuously train it again? Also, software optimization like network pruning.
+
+https://software.intel.com/en-us/articles/optimization-practice-of-deep-learning-inference-deployment-on-intel-processors - openvino and intel inference optimization stuff.
+
+https://medium.com/moonvision/onnx-the-long-and-collaborative-road-to-machine-learning-portability-a6416a96e870 - onnx frameworks, compilers, so on.
+
+use cases for edge computing:
+    - liikennevalot ml siellä? huono lähettää kuvaa cloudiin jne.
