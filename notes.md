@@ -4,7 +4,7 @@ Kysymyksiä:
 
 - tensorflow vs pytorch? especially tensorflow 2.0? just came out. pytorch more stable kinda?
 - basics: train on beefy computer, use ONNX to translate to mobile devices, use best (eg. if original trained with pytorch, tensorflow might be better with mobile devices). Compare different approaches? 
-- TVN and NNVM, alternatives to ONNX?
+- TVM and NNVM, alternatives to ONNX?
 - what data is used in general? CARLA data? how to test several concurrent workloads, VMs or hwat?
 - Maybe interesting: some common architecture in tensorflow and pytorch. test how fast it runs on 'native' tensorflow vs pytorch -> onnx -> tensorflow? how to make sure they're identical first, compare number of calculations? then if/when they're different, find out why and research this? what is onnx doing suboptimally?
 - or: we want to compare compiling straight from onnx to some hardware? vs onnx -> tf/torch -> hardware?
@@ -76,7 +76,11 @@ TODO: ?
 - esim tensorRT vain inferenssi. vs tensorflow, kumpi nopeampi?
 - throughput, latency, resurssien kulutus (muisti jne.) mittaa eri komponentteja etta missä mikin parempi. eri alustoja myös? esim. integratee gpu, jetson, jne.
 
-### Notes
+## 18.10.2019
+
+- ONNX runtime python needs to be installed specifically for GPU? pip install onnxruntime-gpu. different backends, different installations? (use C++ instead?)
+
+# Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?
 
@@ -111,5 +115,12 @@ https://software.intel.com/en-us/articles/optimization-practice-of-deep-learning
 
 https://medium.com/moonvision/onnx-the-long-and-collaborative-road-to-machine-learning-portability-a6416a96e870 - onnx frameworks, compilers, so on.
 
+seems like a very relevant link: https://towardsdatascience.com/benchmarking-hardware-for-cnn-inference-in-2018-1d58268de12a
+    - "1) The Intel Neural Stick is 4x faster than than the Google Vision Kit, which both use the same underlying Movidius 2450 board. Software implementations of the same layers matter."
+
+very similar paper from jussi hanhirova? https://arxiv.org/pdf/1803.09492.pdf
+
 use cases for edge computing:
     - liikennevalot ml siellä? huono lähettää kuvaa cloudiin jne.
+
+cool stuff: https://microsoft.github.io/onnxruntime/auto_examples/plot_profiling.html

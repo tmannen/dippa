@@ -4,7 +4,7 @@ import torchvision
 import numpy as np
 import onnx
 
-model_path = 'models/resnet50.onnx'
+model_path = '../models/resnet50.onnx'
 
 model = torchvision.models.resnet50(pretrained=True)
 batch_size = 1
@@ -13,10 +13,12 @@ x = torch.randn(batch_size, 3, 224, 224, requires_grad=True)
 model.eval()
 torch_out = model(x)
 
+print(torch.cuda.is_available())
 # What about opset versions?
 torch.onnx.export(model, x, model_path, export_params=True)
 
 onnx_model = onnx.load(model_path)
+print(onnx_model.opset_import)
 onnx.checker.check_model(onnx_model)
 
 import onnxruntime
@@ -24,6 +26,7 @@ ort_session = onnxruntime.InferenceSession(model_path)
 
 def to_numpy(tensor):
     return tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
+
 
 ort_inputs = {ort_session.get_inputs()[0].name: to_numpy(x)}
 ort_outs = ort_session.run(None, ort_inputs)
