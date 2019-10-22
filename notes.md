@@ -80,6 +80,12 @@ TODO: ?
 
 - ONNX runtime python needs to be installed specifically for GPU? pip install onnxruntime-gpu. different backends, different installations? (use C++ instead?)
 
+## 22.10.2019
+
+- ONNX runtime cpu - slow? also not using MKL, how to use? How to use GPU? MKL apparently not supported for python, have to use C++/C#?
+- a lot of different things to think about in latency: cache, loading from memory to GPU vs. just CPU, have to 'warmup' the runs to get accurate results? What if we use C++ and python, are their timers the same?
+- TODO: kysy jaakolta mikä paras tapa runnia c++? :V
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?
@@ -92,10 +98,10 @@ netron visualizer?
 
 TVM.ai? used here: https://github.com/dwofk/fast-depth, also has power consumption?
 
-some kind of onnx compiler? https://skymizer.com/publications/Skymizer-AICAS2019.pdf
-
-benchmarking? https://pdfs.semanticscholar.org/c462/ad5a425a4d0fcee178758a6782e7ba7d005b.pdf
-
+some kind of onnx compiler? https://https://pytorch.org/tutorials/intermediate/torchvision_tutorial.htmlskymizer.com/publications/Skymizer-AICAS2019.pdf
+https://pytorch.org/tutorials/intermediate/torchvision_tutorial.html
+benchmarking? https://pdfs.semanticshttps://pytorch.org/tutorials/intermediate/torchvision_tutorial.htmlcholar.org/c462/ad5a425a4d0fcee178758a6782e7ba7d005b.pdf
+https://pytorch.org/tutorials/intermediate/torchvision_tutorial.html
 ^ found by searching "onnx" on google scholar
 
 for research project: maybe something like a use case and then different ways of achieving it? for example for jetson, how to get our model on it and which is fastest? which is easiest to do? but nano is just a computer, everything works..? related: tensorRT? https://docs.nvidia.com/deeplearning/sdk/tensorrt-sample-support-guide/index.html#network_api_pytorch_mnist
@@ -124,3 +130,4 @@ use cases for edge computing:
     - liikennevalot ml siellä? huono lähettää kuvaa cloudiin jne.
 
 cool stuff: https://microsoft.github.io/onnxruntime/auto_examples/plot_profiling.html
+
