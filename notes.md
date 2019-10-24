@@ -84,7 +84,21 @@ TODO: ?
 
 - ONNX runtime cpu - slow? also not using MKL, how to use? How to use GPU? MKL apparently not supported for python, have to use C++/C#?
 - a lot of different things to think about in latency: cache, loading from memory to GPU vs. just CPU, have to 'warmup' the runs to get accurate results? What if we use C++ and python, are their timers the same?
-- TODO: kysy jaakolta mikä paras tapa runnia c++? :V
+- TODO: kysy jaakolta mikä paras tapa runnia c++? :V C++ tarvii varmaan onnx runtime MKL jne.
+
+## 24.10.2019
+
+- Tried onnxruntime-gpu (new conda env, scuffed_latency_test.py), the difference between that and pytorch native eval is almost non existent.
+- installed cudnn with the ubuntu debs, gets installed in /usr/include? is it used then? (well at least the error onnxruntime-gpu ran into disappeared after that)
+    - installed ALSO with just libraries - will it break something? libcudnn didn't seem to be in the correct place so had to do it.
+
+- installed tensorrt 6.0: https://developer.nvidia.com/nvidia-tensorrt-6x-download
+    - install notes: used .deb file, followed the sudo dpkg -i etc. install seems to be in /usr/src?
+- installing onnxruntime (wheel?) from source:
+    - cmake needed to be updated: used official apt, worked (google it)
+    - cloned github onnxruntime repo. install command: `./build.sh --cudnn_home /usr/include --cuda_home /usr/local/cuda --use_tensorrt --tensorrt_home /usr/src/tensorrt/ --build_wheel`
+    - didnt work, updated locale, try --update fix here?: https://github.com/microsoft/onnxruntime/issues/1203
+
 
 # Misc Notes
 

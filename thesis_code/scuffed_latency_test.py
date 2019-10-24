@@ -48,6 +48,7 @@ def to_numpy(tensor):
 onnx_model = onnx.load(model_path)
 onnx.checker.check_model(onnx_model)
 ort_session = onnxruntime.InferenceSession(model_path)
+print(ort_session.get_providers())
 ort_inputs = {ort_session.get_inputs()[0].name: to_numpy(x)}
 ort_outs = ort_session.run(None, ort_inputs)
 
