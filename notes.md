@@ -96,9 +96,18 @@ TODO: ?
     - install notes: used .deb file, followed the sudo dpkg -i etc. install seems to be in /usr/src?
 - installing onnxruntime (wheel?) from source:
     - cmake needed to be updated: used official apt, worked (google it)
-    - cloned github onnxruntime repo. install command: `./build.sh --cudnn_home /usr/include --cuda_home /usr/local/cuda --use_tensorrt --tensorrt_home /usr/src/tensorrt/ --build_wheel`
-    - didnt work, updated locale, try --update fix here?: https://github.com/microsoft/onnxruntime/issues/1203
+    - cloned github onnxruntime repo. install command: `./build.sh --cudnn_home /usr/include --cuda_home /usr/local/cuda --use_tensorrt --tensorrt_home /usr/src/tensorrt/ --build_wheel --update`
+    - didnt work, updated locale, try --update fix here?: https://github.com/microsoft/onnxruntime/issues/1203:
+        - `locale-gen en_US.UTF-8 update-locale LANG=en_US.UTF-8`
+    - got error: `Error: 'libpython3.7m.so.1.0: cannot open shared object file`. fixed by running: `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/u/81/karkkat5/unix/anaconda3/envs/onnxruntime-trt/lib`
+    - Apparently a debug build - problem?
 
+## 28.10.2019
+
+- Got onnxruntime-trt working. Seems to bring an improvement to the inference! roughly a 30% improvement compared to pytorch in eval mode (also against onnxruntime-gpu, which had almost identical times to pytorch)
+- TODO: try building with ngraph, openvino, mkldnn/mklml?
+- TODO: check that the results are correct pytorch vs tensorrt (or at least close enough)
+- TODO?: onnxruntime build with all backends and choose in script? is it possible?
 
 # Misc Notes
 
