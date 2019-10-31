@@ -109,6 +109,12 @@ TODO: ?
 - TODO: check that the results are correct pytorch vs tensorrt (or at least close enough)
 - TODO?: onnxruntime build with all backends and choose in script? is it possible?
 
+## 31.10.2019
+
+- reinforcement learning CARLA simulation? steering?
+- steering test problem: if only one camera the car doesn't know how to correct if it steers away fro mthe middle of the road?
+- carla simulation data needs data where the car recovers from mistakes?
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?
