@@ -27,7 +27,7 @@ class NetworkNvidia(nn.Module):
             Convolution: 3x3, filter: 64, strides: 1x1, activation: ELU
             Drop out (0.5)https://github.com/Zhenye-Na/self-driving-vehicles-sim-with-ml/blob/master/src/model.py
             Fully connected: neurons: 100, activation: ELU
-            Fully connected: neurons: 50, activation: ELU
+            Fully connected: neurons: 50, activation: ELU 
             Fully connected: neurons: 10, activation: ELU
             Fully connected: neurons: 1 (output)
         the convolution layers are meant to handle feature engineering.
