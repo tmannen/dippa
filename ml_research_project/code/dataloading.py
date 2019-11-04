@@ -1,4 +1,5 @@
 from torch.utils import data
+import torch
 
 #import cv2
 import numpy as np
@@ -21,10 +22,11 @@ class CARLADataset(data.Dataset):
 
     def __getitem__(self, index):
         """Get image."""
-        steering_angle = self.steer[index]
+        steering_angle = np.array(self.steer[index])
         rgb_img = np.array(Image.open(os.path.join(self.imagedir, str(index) + ".jpg")))
+        rgb_img = rgb_img.transpose((2, 0, 1))
 
-        return (rgb_img, steering_angle)
+        return (torch.from_numpy(rgb_img), torch.from_numpy(steering_angle))
 
     def __len__(self):
         """Length of dataset."""

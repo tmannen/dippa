@@ -1,6 +1,3 @@
-%load_ext autoreload
-%autoreload 2
-
 import matplotlib.pyplot as plt
 from dataloading import CARLADataset
 

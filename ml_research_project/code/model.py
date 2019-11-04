@@ -58,7 +58,7 @@ class NetworkNvidia(nn.Module):
 
     def forward(self, input):
         """Forward pass."""
-        input = input.view(input.size(0), 3, 70, 320)
+        #input = input.view(input.size(0), 3, 70, 320)
         output = self.conv_layers(input)
         # print(output.shape)
         output = output.view(output.size(0), -1)
