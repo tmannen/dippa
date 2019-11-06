@@ -25,7 +25,7 @@ class NetworkNvidia(nn.Module):
             Convolution: 5x5, filter: 48, strides: 2x2, activation: ELU
             Convolution: 3x3, filter: 64, strides: 1x1, activation: ELU
             Convolution: 3x3, filter: 64, strides: 1x1, activation: ELU
-            Drop out (0.5)https://github.com/Zhenye-Na/self-driving-vehicles-sim-with-ml/blob/master/src/model.py
+            Drop out (0.5) https://github.com/Zhenye-Na/self-driving-vehicles-sim-with-ml/blob/master/src/model.py
             Fully connected: neurons: 100, activation: ELU
             Fully connected: neurons: 50, activation: ELU 
             Fully connected: neurons: 10, activation: ELU
@@ -48,7 +48,7 @@ class NetworkNvidia(nn.Module):
             nn.Dropout(0.5)
         )
         self.linear_layers = nn.Sequential(
-            nn.Linear(in_features=64 * 2 * 33, out_features=100),
+            nn.Linear(in_features=64 * 25 * 57, out_features=100),
             nn.ELU(),
             nn.Linear(in_features=100, out_features=50),
             nn.ELU(),
@@ -60,7 +60,6 @@ class NetworkNvidia(nn.Module):
         """Forward pass."""
         #input = input.view(input.size(0), 3, 70, 320)
         output = self.conv_layers(input)
-        # print(output.shape)
         output = output.view(output.size(0), -1)
         output = self.linear_layers(output)
         return output

@@ -2,6 +2,12 @@
 Main pipeline of Self-driving car training.
 @author: Zhenye Na - https://github.com/Zhenye-Na
 @reference: "End to End Learning for Self-Driving Cars", arXiv:1604.07316
+
+Modified by tmannen
+
+TODO: add transformations, image normalization and augmentations?
+TODO: use validation set
+TODO: use more cmd args? to set lr etc.?
 """
 
 import argparse
