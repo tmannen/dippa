@@ -1,15 +1,14 @@
 import os
 import torch
 
-def train(model, criterion, optimizer, scheduler, dataloader, epochs=25):
+def train(model, criterion, optimizer, scheduler, train_loader, val_loader, epochs=25):
     """Training process."""
-    model.train()
     for epoch in range(epochs):
-
+        model.train()
         # Training
         running_loss = 0.0
 
-        for i, data in enumerate(dataloader):
+        for i, data in enumerate(train_loader):
             # Model computations
             inputs, angles = data
             inputs = inputs.float().cuda()
@@ -29,3 +28,18 @@ def train(model, criterion, optimizer, scheduler, dataloader, epochs=25):
         running_loss = 0.0
 
         scheduler.step()
+
+        if epoch % 5 == 0:
+            # print val loss every 5 epochs
+            model.eval()
+            running_val_loss = 0
+            for i, data in enumerate(val_loader):
+                inputs, angles = data
+                inputs = inputs.float().cuda()
+                # output and target should be same shape (unsqueeze)
+                angles = angles.float().unsqueeze(1).cuda()
+                outputs = model(inputs)
+                loss = criterion(outputs, angles)
+                running_val_loss += loss.item()
+
+            print("Validation Loss: {}".format(running_val_loss))
