@@ -23,9 +23,9 @@ class CARLADataset(data.Dataset):
 
     def __getitem__(self, index):
         """Get image."""
-        steering_angle = torch.from_numpy(np.array(self.steer[index]))
-        rgb_img = Image.open(os.path.join(self.imagedir, str(index) + ".jpg")).transpose((2, 0, 1))
-        rgb_img, steering_angle = self.transform(rgb_img)
+        steering_angle = np.array([self.steer[index]])
+        rgb_img = np.array(Image.open(os.path.join(self.imagedir, str(index) + ".jpg")))
+        rgb_img, steering_angle = self.transform((rgb_img, steering_angle))
 
         return rgb_img, steering_angle
 
@@ -38,14 +38,25 @@ class Flip(object):
     Flip image and steer angle
     """
 
-    def __init__(self, output_size):
-        self.output_size = output_size
+    def __init__(self, flip_prob):
+        self.flip_prob = flip_prob
+
+    def __call__(self, sample):
+        rgb_img, angle = sample
+        if np.random.rand() < self.flip_prob:
+            rgb_img = np.fliplr(rgb_img)
+            angle = angle * -1.0
+
+        return rgb_img, angle
+
+class ToTensor(object):
+    """Convert ndarrays in sample to Tensors."""
 
     def __call__(self, sample):
         rgb_img, angle = sample
 
-        if np.random.rand() < 0.3:
-            rgb_img = transforms.RandomHorizontalFlip(1.0) # function doesn't say whether image was flipped or not so we do it this way
-            angle = angle * -1.0
-
-        return rgb_img, angle
+        # swap color axis because
+        # numpy image: H x W x C
+        # torch image: C X H X W
+        rgb_img = rgb_img.transpose((2, 0, 1))
+        return torch.from_numpy(rgb_img.copy()), torch.from_numpy(angle)

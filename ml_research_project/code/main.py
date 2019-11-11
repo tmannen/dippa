@@ -17,7 +17,7 @@ import torchvision.transforms as transforms
 from torch.optim.lr_scheduler import MultiStepLR
 
 from model import NetworkNvidia
-from dataloading import CARLADataset, Flip
+from dataloading import CARLADataset, Flip, ToTensor
 from torch.utils.data import Dataset, DataLoader
 from train import train
 
@@ -26,6 +26,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Main pipeline for self-driving vehicles simulation using machine learning.')
     # directory
     parser.add_argument('--dataroot', type=str, default="../data/", help='path to dataset')
+    parser.add_argument('--lr', type=float, default=0.0001, help='learning rate')
+    parser.add_argument('--batchsize', type=int, default=16, help='batch size')
     args = parser.parse_args()
 
     return args
@@ -36,22 +38,24 @@ def main():
     # load trainig set and split
     args = parse_args()
     transformations = transforms.Compose([
-        transforms.Lambda(lambda img, angle: ((img / 127.5) - 1.0, angle)),
-        Flip])
+        transforms.Lambda(lambda samp: ((samp[0] / 127.5) - 1.0, samp[1])),
+        Flip(0.3),
+        ToTensor()]
+        )
     full_dataset = CARLADataset(args.dataroot, transform=transformations)
-    train_size = int(0.8 * len(full_dataset))
+    train_size = int(0.85 * len(full_dataset))
     test_size = len(full_dataset) - train_size
     train_dataset, val_dataset = torch.utils.data.random_split(full_dataset, [train_size, test_size])
     print("==> Preparing dataset ...")
 
-    train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True, num_workers=4)
-    val_loader = DataLoader(val_dataset, batch_size=16, shuffle=True, num_workers=4)
+    train_loader = DataLoader(train_dataset, batch_size=args.batchsize, shuffle=True, num_workers=4)
+    val_loader = DataLoader(val_dataset, batch_size=args.batchsize, shuffle=True, num_workers=4)
     # define model
     print("==> Initialize model ...")
     model = NetworkNvidia().cuda()
 
     # define optimizer and criterion
-    optimizer = optim.Adam(model.parameters(), lr=0.0001)
+    optimizer = optim.Adam(model.parameters(), lr=args.lr)
     criterion = nn.MSELoss()
 
     # learning rate scheduler

@@ -13,7 +13,7 @@ def train(model, criterion, optimizer, scheduler, train_loader, val_loader, epoc
             inputs, angles = data
             inputs = inputs.float().cuda()
             # output and target should be same shape (unsqueeze)
-            angles = angles.float().unsqueeze(1).cuda()
+            angles = angles.float().cuda()
             optimizer.zero_grad()
             # print("training image: ", imgs.shape)
             outputs = model(inputs)
@@ -37,9 +37,9 @@ def train(model, criterion, optimizer, scheduler, train_loader, val_loader, epoc
                 inputs, angles = data
                 inputs = inputs.float().cuda()
                 # output and target should be same shape (unsqueeze)
-                angles = angles.float().unsqueeze(1).cuda()
+                angles = angles.float().cuda()
                 outputs = model(inputs)
                 loss = criterion(outputs, angles)
                 running_val_loss += loss.item()
 
-            print("Validation Loss: {}".format(running_val_loss))
+            print("Validation Loss (average over validation set): {}".format(running_val_loss / len(val_loader.dataset)))
