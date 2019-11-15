@@ -60,3 +60,15 @@ class ToTensor(object):
         # torch image: C X H X W
         rgb_img = rgb_img.transpose((2, 0, 1))
         return torch.from_numpy(rgb_img.copy()), torch.from_numpy(angle)
+
+class ToTensorImg(object):
+    """Convert ndarrays in sample to Tensors."""
+
+    def __call__(self, sample):
+        rgb_img = sample
+
+        # swap color axis because
+        # numpy image: H x W x C
+        # torch image: C X H X W
+        rgb_img = rgb_img.transpose((2, 0, 1))
+        return torch.from_numpy(rgb_img.copy())
