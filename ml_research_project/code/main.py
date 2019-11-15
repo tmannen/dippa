@@ -28,6 +28,8 @@ def parse_args():
     parser.add_argument('--dataroot', type=str, default="../data/", help='path to dataset')
     parser.add_argument('--lr', type=float, default=0.0001, help='learning rate')
     parser.add_argument('--batchsize', type=int, default=16, help='batch size')
+    parser.add_argument('--save_path', type=str, default=None, help='path to the model for possible saving')
+    parser.add_argument('--load_path', type=str, default=None, help='path to the model for possible loading')
     args = parser.parse_args()
 
     return args
@@ -52,7 +54,11 @@ def main():
     val_loader = DataLoader(val_dataset, batch_size=args.batchsize, shuffle=True, num_workers=4)
     # define model
     print("==> Initialize model ...")
-    model = NetworkNvidia().cuda()
+    if args.load_path is not None:
+        print("==> Loading model from supplied path ...")
+        model = torch.load(args.load_path)
+    else:
+        model = NetworkNvidia().cuda()
 
     # define optimizer and criterion
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
@@ -67,7 +73,7 @@ def main():
 
     # training
     print("==> Start training ...")
-    train(model, criterion, optimizer, scheduler, train_loader, val_loader)
+    train(model, criterion, optimizer, scheduler, train_loader, val_loader, args.save_path)
 
 
 if __name__ == '__main__':

@@ -9,8 +9,10 @@ import json
 import os
 import numpy as np
 
-orig_data_root = "../anton_files/with_noise_1/"
-dataset_root = "../data/"
+orig_data_root = "../anton_files/without_noise/"
+# on work computer /l is the local disk, much faster?
+dataset_root = "/l/data_without_noise/"
+os.makdirs(dataset_root)
 
 datas = [h5py.File(os.path.join(orig_data_root, hdf), 'r') for hdf in os.listdir(orig_data_root) if ".hdf5" in hdf]
 steering_angles = []

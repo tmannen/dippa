@@ -1,7 +1,7 @@
 import os
 import torch
 
-def train(model, criterion, optimizer, scheduler, train_loader, val_loader, epochs=25):
+def train(model, criterion, optimizer, scheduler, train_loader, val_loader, save_path, epochs=25):
     """Training process."""
     for epoch in range(epochs):
         model.train()
@@ -30,7 +30,10 @@ def train(model, criterion, optimizer, scheduler, train_loader, val_loader, epoc
         scheduler.step()
 
         if epoch % 5 == 0:
-            # print val loss every 5 epochs
+            # print val loss and save model every 5 epochs
+            if save_path is not None:
+                torch.save(model, save_path)
+
             model.eval()
             running_val_loss = 0
             for i, data in enumerate(val_loader):
