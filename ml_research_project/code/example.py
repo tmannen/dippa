@@ -1,3 +1,7 @@
+"""
+example of using carla simulation to drive a car with a neural network model
+"""
+
 import glob
 import os
 import sys

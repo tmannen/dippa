@@ -1,6 +1,8 @@
 """
 Creates rgb, steer angle, more? from all the h5py files and puts them in the same folder
 Needed? for smoother pytorch dataloading.
+
+Uses the new format where ego and steering index are a bit different
 """
 
 import h5py
@@ -29,7 +31,7 @@ def main():
     target_full = os.path.join(args.target, source_name)
     if not os.path.exists(target_full):
         os.makedirs(target_full)
-    datas = [h5py.File(os.path.join(orig_data_root, hdf), 'r') for hdf in os.listdir(orig_data_root) if ".hdf5" in hdf]
+    datas = [h5py.File(os.path.join(orig_data_root, hdf), 'r') for hdf in sorted(os.listdir(orig_data_root)) if ".hdf5" in hdf]
     steering_angles = []
     global_index = 0
 
@@ -42,11 +44,12 @@ def main():
         # Find correct index for ego_vehicle
         ego_id = metadata["ego_vehicle_id"]
         ego_index = None
-        for index, actor_id in enumerate(data['state/id']):
-            if actor_id[0, 0] == ego_id:
+        for index, actor_id in enumerate(data['state/id'][0]):
+            if actor_id == ego_id:
                 ego_index = index
 
-        steering_angles.append(np.array(steer[ego_index]))
+        steering_angles.append(np.array(steer[:,ego_index]))
+        print(np.array(steer[:,ego_index]).shape)
         # Get sensor data and steering angle for all frames
         for name, images in sensors.items():
             if "lidar" in name:
