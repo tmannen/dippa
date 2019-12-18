@@ -15,6 +15,9 @@ TODO: test dataset? without noise? plot errors jne?
 TODO: validation/training thing: should we make it so augmentations are only applied while training?
 TODO 19.11.2019: create_dataset_new, miten indeksit jne?
 
+TODO 16.12.2019: jonkinlaista testiä dataan?
+TODO: trainasin mallin paljolla datalla, testaile? varmaan tuolla models/testing.mdl
+
 dataset pelleilyt:
 
 - create_dataset_new.py: uuden kaltaiset, eri indeksit

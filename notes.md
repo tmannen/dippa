@@ -93,7 +93,7 @@ TODO: ?
     - installed ALSO with just libraries - will it break something? libcudnn didn't seem to be in the correct place so had to do it.
 
 - installed tensorrt 6.0: https://developer.nvidia.com/nvidia-tensorrt-6x-download
-    - install notes: used .deb file, followed the sudo dpkg -i etc. install seems to be in /usr/src?
+    - install notes: used .deb file, followed the sudo dpkg -i etc. install seems to be in /usr/src? NOT ANYMORE, INSTALLED FROM TAR
 - installing onnxruntime (wheel?) from source:
     - cmake needed to be updated: used official apt, worked (google it)
     - cloned github onnxruntime repo. install command: `./build.sh --cudnn_home /usr/include --cuda_home /usr/local/cuda --use_tensorrt --tensorrt_home /usr/src/tensorrt/ --build_wheel --update`
@@ -114,6 +114,20 @@ TODO: ?
 - reinforcement learning CARLA simulation? steering?
 - steering test problem: if only one camera the car doesn't know how to correct if it steers away fro mthe middle of the road?
 - carla simulation data needs data where the car recovers from mistakes?
+
+## 16.12.2019
+
+- TODO: onnxruntime tensorrt uusiks joku cublas bullshitti -_- testaa cublas toimivuus? jotain 10.1 eri paikassa ehkä cudassa blaa
+
+## 17.12.2019
+
+- installed cudnn again: https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html (7.6.5)
+- tensorrt installation: https://docs.nvidia.com/deeplearning/sdk/tensorrt-install-guide/index.html#installing-tar
+- some cublas errors (not necessarily because tensorrt?): reinstalled cuda, ran purge cuda, clean, jne with sudo. LD library path properly, added to .bashrc
+- TODO: try docker images?
+- TODO: onnxruntime reinstall: ./build.sh --cudnn_home /usr/include --cuda_home /usr/local/cuda --use_tensorrt --tensorrt_home /l/software/TensorRT-6.0.1.5 --build_wheel --update --build --enable_pybind | all of these needed?
+- had to update LD_LIBRARY_PATH like so: export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/u/81/karkkat5/unix/anaconda3/envs/tensorrt/lib. Needs to be in LD_LIBRARY_PATH for onnxruntime, otherwise it complais cant find some libpython3.7? NOTE: added the conda env tensorrt lib.
+
 
 # Misc Notes
 
