@@ -128,6 +128,14 @@ TODO: ?
 - TODO: onnxruntime reinstall: ./build.sh --cudnn_home /usr/include --cuda_home /usr/local/cuda --use_tensorrt --tensorrt_home /l/software/TensorRT-6.0.1.5 --build_wheel --update --build --enable_pybind | all of these needed?
 - had to update LD_LIBRARY_PATH like so: export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/u/81/karkkat5/unix/anaconda3/envs/tensorrt/lib. Needs to be in LD_LIBRARY_PATH for onnxruntime, otherwise it complais cant find some libpython3.7? NOTE: added the conda env tensorrt lib.
 
+TODO: more than tensorrt, maybe build onnxruntime with all if possible? python support for all possible? more about interoperability?
+
+## 19.12.2019
+
+- Dissecting nvidia vola gpu architecture via microbenchmarking (paperi) Zhe jia, marco maggioni
+- performance testing in shell mode?
+- onnxruntime perftest important - TODO: pb data?
+
 
 # Misc Notes
 
