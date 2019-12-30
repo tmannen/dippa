@@ -136,6 +136,16 @@ TODO: more than tensorrt, maybe build onnxruntime with all if possible? python s
 - performance testing in shell mode?
 - onnxruntime perftest important - TODO: pb data?
 
+## 30.12.2019
+
+Dippa notes (image in gmail):
+- Interoperability benchmarking?
+- docker? forgot to ask
+- many different models for testing, cnns mostly, nlp. export to onnx, successful? if not, this is experiment data itself. test this onnx translation with many backends/tools?
+- WHY is some optimizer better? table of runtimes, models. some runtime might surprise, explain why it's bad/good. quantization, etc. is it still similar enough to the original model? statistical things, mean, std. does run time vary between runs?
+- ONNXruntime performancetest - is it enough? what about tool specific optimizations that the onnxruntime tool might not support? maybe test them by themselves too, see how they fare?
+- Profiling link: https://developer.download.nvidia.com/video/gputechconf/gtc/2019/presentation/s9339-profiling-deep-learning-networks.pdf
+
 
 # Misc Notes
 
