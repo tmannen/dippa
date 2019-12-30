@@ -145,6 +145,7 @@ Dippa notes (image in gmail):
 - WHY is some optimizer better? table of runtimes, models. some runtime might surprise, explain why it's bad/good. quantization, etc. is it still similar enough to the original model? statistical things, mean, std. does run time vary between runs?
 - ONNXruntime performancetest - is it enough? what about tool specific optimizations that the onnxruntime tool might not support? maybe test them by themselves too, see how they fare?
 - Profiling link: https://developer.download.nvidia.com/video/gputechconf/gtc/2019/presentation/s9339-profiling-deep-learning-networks.pdf
+- TODO: pb data edelleen? ota pic gmailista. kokeile converter monilla malleilla?
 
 
 # Misc Notes
