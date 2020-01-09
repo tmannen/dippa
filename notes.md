@@ -125,6 +125,7 @@ TODO: ?
 - tensorrt installation: https://docs.nvidia.com/deeplearning/sdk/tensorrt-install-guide/index.html#installing-tar
 - some cublas errors (not necessarily because tensorrt?): reinstalled cuda, ran purge cuda, clean, jne with sudo. LD library path properly, added to .bashrc
 - TODO: try docker images?
+- build instructions for onnx runtime: https://github.com/microsoft/onnxruntime/blob/master/BUILD.md
 - TODO: onnxruntime reinstall: ./build.sh --cudnn_home /usr/include --cuda_home /usr/local/cuda --use_tensorrt --tensorrt_home /l/software/TensorRT-6.0.1.5 --build_wheel --update --build --enable_pybind | all of these needed?
 - had to update LD_LIBRARY_PATH like so: export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/u/81/karkkat5/unix/anaconda3/envs/tensorrt/lib. Needs to be in LD_LIBRARY_PATH for onnxruntime, otherwise it complais cant find some libpython3.7? NOTE: added the conda env tensorrt lib.
 
@@ -134,7 +135,7 @@ TODO: more than tensorrt, maybe build onnxruntime with all if possible? python s
 
 - Dissecting nvidia vola gpu architecture via microbenchmarking (paperi) Zhe jia, marco maggioni
 - performance testing in shell mode?
-- onnxruntime perftest important - TODO: pb data?
+- onnxruntime perftest important - TODO: pb data?. pb data created with create_random_data.py
 
 ## 30.12.2019
 
@@ -147,6 +148,30 @@ Dippa notes (image in gmail):
 - Profiling link: https://developer.download.nvidia.com/video/gputechconf/gtc/2019/presentation/s9339-profiling-deep-learning-networks.pdf
 - TODO: pb data edelleen? ota pic gmailista. kokeile converter monilla malleilla?
 
+## 03.01.2020
+
+- onnx_perf_test: main logic in ort_test_session.cc? performance_runner.cc imports from there?
+- Installing openvino:
+    - https://software.intel.com/en-us/openvino-toolkit/choose-download/free-download-linux download
+    - follow instructions: http://docs.openvinotoolkit.org/2019_R3.1/_docs_install_guides_installing_openvino_linux.html
+    - (install prerequisites jne. also changed $HOME to export HOME=/l (do permanently?) due to permissions issues with sample.) ran the sample with sudo
+    - especially "source /opt/intel/openvino/bin/setupvars.sh (maybe put in .bashrc?)" NOTE remember to do this before building? if using openvino
+
+- Installing ngraph (no need for onnx runtime? but needed if I want to do it myself?) TODO?
+- Big build command using most backends: ```./build.sh --config RelWithDebInfo --cudnn_home /usr/include --cuda_home /usr/local/cuda --use_tensorrt --tensorrt_home /l/software/TensorRT-6.0.1.5 --use_dnnl --use_ngraph --use_openvino GPU_FP32 --build_wheel --update --build --enable_pybind```
+
+## 07.01.2020
+
+- TODO: (test docker tensorrt, is docker enough when performance is key?), test speeds? run perf_test in docker and normally, see if any inefficiencies?
+- TODO?: write script to create docker, run perf test? commands, upload them to local, etc.?
+- try openvino tool by itself?
+- TODO: what to write to thesis?
+
+## 09.01.2020
+
+- TODO: write more about the models chosen and why, eg. are they using batch norm and so on?
+- TODO: actually try them out in tensorrt maybe, also test if onnx export works even. (check that model outputs are sufficiently close)
+- maybe yolo in model_defs instead of models or something?
 
 # Misc Notes
 
