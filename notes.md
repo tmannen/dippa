@@ -173,6 +173,13 @@ Dippa notes (image in gmail):
 - TODO: actually try them out in tensorrt maybe, also test if onnx export works even. (check that model outputs are sufficiently close)
 - maybe yolo in model_defs instead of models or something?
 
+## 10.01.2020
+
+- PYTORCH many errors when saving model: UserWarning: Couldn't retrieve source code for container of type AdaptiveAvgPool2d. It won't be checked for correctness upon loading. resnet50
+- TENSORRT: kirjoita että vaikeampi saada käyntiin, tarttee kaikkee allocate buffers n shit.
+- TENSORRT: started tensorrt_test.py that loans code from yolov3_onnx tensorrt repo. uses common.py in samples and PYCUDA. some problems, like bad error messages (saying just invalid arguments although the dtype of the image was wrong, needed to switch from fp64 to fp32). need to manually allocate memory and stuff? what about using int8 optimizations and things like that?
+- TODO maanantai: jatka tensorrt kikkailua, kokeile accuracy sama, ehkä more optimizations. vertaa onnx runtime? 
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?

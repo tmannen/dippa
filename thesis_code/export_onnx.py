@@ -11,40 +11,57 @@ import torch.nn as nn
 import torch.onnx
 import torch.nn.functional as F
 import torch.optim as optim
+import os
 
 def export_resnet50():
-    model_path = "models/resnet50/resnet50.onnx"
+    # TODO: absolute paths?
+    model_path = "models/resnet50/"
+    os.makedirs(model_path, exist_ok=True)
+    onnx_model_name = "resnet50.onnx"
+    torch_model_name = "resnet50.pt"
     model = torchvision.models.resnet50(pretrained=True)
     model.eval()
     x = torch.randn(1, 3, 224, 224, requires_grad=True)
     # What about opset versions?
-    torch.onnx.export(model, x, model_path, export_params=True, opset_version=11)
+    torch.save(model, os.path.join(model_path, torch_model_name))
+    torch.onnx.export(model, x, os.path.join(model_path, onnx_model_name), export_params=True, opset_version=11)
 
 def export_fasterRCNN():
     """
-    not working in pytorch 1.3? complains about FrozenBatchNorm
+    export not working in pytorch 1.3? complains about FrozenBatchNorm
+
+    uses resnet as backbone
     """
-    model_path = "models/faster_rcnn.onnx"
+    model_path = "models/faster_rcnn/"
+    os.makedirs(model_path, exist_ok=True)
+    onnx_model_name = "faster_rcnn.onnx"
+    torch_model_name = "faster_rcnn.pt"
     model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
     model.eval()
     x = torch.randn(1, 3, 224, 224, requires_grad=True)
     out = model(x)
     # What about opset versions?
-    torch.onnx.export(model, x, model_path, export_params=True, opset_version=11)
+    torch.save(model.state_dict, os.path.join(model_path, torch_model_name))
+    torch.onnx.export(model, x, os.path.join(model_path, onnx_model_name), export_params=True, opset_version=11)
 
 def export_squeezenet():
-    """
-    not working in pytorch 1.3? complains about FrozenBatchNorm
-    """
-    model_path = "models/squeezenet.onnx"
+    model_path = "models/squeezenet/"
+    os.makedirs(model_path)
+    onnx_model_name = "squeezenet.onnx"
+    torch_model_name = "squeezenet.pt"
     model = torchvision.models.squeezenet1_0(pretrained=True)
     model.eval()
     x = torch.randn(1, 3, 224, 224, requires_grad=True)
     out = model(x)
     # What about opset versions?
-    torch.onnx.export(model, x, model_path, export_params=True, opset_version=11)
+    torch.save(model.state_dict, os.path.join(model_path, torch_model_name))
+    torch.onnx.export(model, x, os.path.join(model_path, onnx_model_name), export_params=True, opset_version=11)
 
 def export_lstm():
+    model_path = "models/lstm/"
+    os.makedirs(model_path)
+    onnx_model_name = "lstm.onnx"
+    torch_model_name = "lstm.pt"
     layer_count = 4
 
     model = nn.LSTM(10, 20, num_layers=layer_count, bidirectional=True)
@@ -62,6 +79,7 @@ def export_lstm():
         # print(onnx_model.graph.input[0])
 
         # export with `dynamic_axes`
+        torch.save(model.state_dict, os.path.join(model_path, torch_model_name))
         torch.onnx.export(model, (input, (h0, c0)), 'models/lstm.onnx',
                         input_names=['input', 'h0', 'c0'],
                         output_names=['output', 'hn', 'cn'],
@@ -70,18 +88,29 @@ def export_lstm():
         # onnx_model = onnx.load('lstm.onnx')
         # input shape ['sequence', 3, 10]
         # print(onnx_model.graph.input[0])
+
+def sanity_check(model, model_path):
+    """
+    test if pytorch model loading works since it complained about something
+
+    should probably have other models too...
+    """
+    x = torch.randn(1, 3, 224, 224)
+    loaded_model = torch.load("models/resnet50/resnet50.pt")
+    loaded_model.eval()
+    model = torchvision.models.resnet50(pretrained=True)
+    model.eval()
+    loaded = loaded_model(x)
+    norm = model(x)
+    np.testing.assert_allclose(loaded.detach().numpy(), norm.detach().numpy(), rtol=1e-03, atol=1e-05)
+
+"""
 def export_yolo():
-    ls
     import models
-    yolo = models.Darknet('config/yolo3.cfg')
-    ls
-    ls config
     yolo = models.Darknet('config/yolov3.cfg')
     data_shape = [1, 3, 224, 224]
     import torch
-    input = torch.(data_shape)
     input = torch.randn(data_shape)
-    input
     yolo(input)
     import torch.onnx
     x = torch.randn(1, 3, 224, 224, requires_grad=True)
@@ -89,6 +118,8 @@ def export_yolo():
     pwd
     torch.onnx.export(yolo, x, "yolo.onnx", export_params=True, opset_version=11)
     history
+"""
 
-
-export_squeezenet()
+export_resnet50()
+#export_lstm()
+#export_squeezenet()
