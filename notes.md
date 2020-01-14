@@ -175,10 +175,17 @@ Dippa notes (image in gmail):
 
 ## 10.01.2020
 
-- PYTORCH many errors when saving model: UserWarning: Couldn't retrieve source code for container of type AdaptiveAvgPool2d. It won't be checked for correctness upon loading. resnet50
+- PYTORCH many errors when saving model: UserWarning: Couldn't retrieve source code for container of type AdaptiveAvgPool2d. It won't be checked for correctness upon loading. resnet50. "you can ignore this warning?" https://discuss.pytorch.org/t/got-warning-couldnt-retrieve-source-code-for-container/7689
 - TENSORRT: kirjoita että vaikeampi saada käyntiin, tarttee kaikkee allocate buffers n shit.
 - TENSORRT: started tensorrt_test.py that loans code from yolov3_onnx tensorrt repo. uses common.py in samples and PYCUDA. some problems, like bad error messages (saying just invalid arguments although the dtype of the image was wrong, needed to switch from fp64 to fp32). need to manually allocate memory and stuff? what about using int8 optimizations and things like that?
 - TODO maanantai: jatka tensorrt kikkailua, kokeile accuracy sama, ehkä more optimizations. vertaa onnx runtime? 
+
+## 14.01.2020
+
+- WEIRD: time_tensorrt first gave about 6.2msec per image, but after a few tried went down to 5.4msec and stays there?
+- TODO: build onnx_runtime again when leaving today? compare to tensorrt on wednesday?
+- TENSORRT: best practices: https://docs.nvidia.com/deeplearning/sdk/tensorrt-best-practices/index.html#optimize-python lots of stuff, how to optimize the best? :( does tensorrt onnx parser do this automatically? 
+- TODO:
 
 # Misc Notes
 

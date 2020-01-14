@@ -47,6 +47,10 @@
 # Users Notice.
 #
 
+"""
+FOR time_tensorrt.py -Teemu. copied from nvidia tensorrt samples (yolov3_onnx)
+"""
+
 from itertools import chain
 import argparse
 import os

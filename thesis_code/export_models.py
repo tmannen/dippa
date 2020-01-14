@@ -1,5 +1,6 @@
 """
 export several models from pytorch to ONNX. These are used later from other inference engines.
+Also export the original pytorch model.
 """
 
 import torch.onnx
@@ -88,21 +89,6 @@ def export_lstm():
         # onnx_model = onnx.load('lstm.onnx')
         # input shape ['sequence', 3, 10]
         # print(onnx_model.graph.input[0])
-
-def sanity_check(model, model_path):
-    """
-    test if pytorch model loading works since it complained about something
-
-    should probably have other models too...
-    """
-    x = torch.randn(1, 3, 224, 224)
-    loaded_model = torch.load("models/resnet50/resnet50.pt")
-    loaded_model.eval()
-    model = torchvision.models.resnet50(pretrained=True)
-    model.eval()
-    loaded = loaded_model(x)
-    norm = model(x)
-    np.testing.assert_allclose(loaded.detach().numpy(), norm.detach().numpy(), rtol=1e-03, atol=1e-05)
 
 """
 def export_yolo():
