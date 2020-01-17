@@ -5,13 +5,13 @@ Test models using original pytorch and then some framework? Maybe tensorrt first
 import numpy as np
 import tensorrt as trt
 import sys, os
-import common
+import trt_common as common
 import argparse
 from timeit import default_timer as timer
 
 TRT_LOGGER = trt.Logger()
 
-def get_engine(onnx_file_path, engine_file_path=""):
+def get_engine(onnx_file_path, engine_file_path):
     """Attempts to load a serialized engine if available, otherwise builds a new TensorRT engine and saves it."""
     print("Explicit batch: ", common.EXPLICIT_BATCH)
     def build_engine():
@@ -54,31 +54,33 @@ def run_tensorrt_inference(onnx_file_path, engine_file_path, n=1000):
     Run inference on n random inputs? maybe define inputs later?
     """
     # Define inputs too? since some models have different shapes of inputs
-    outputs = []
+    trt_outputs = []
     name = engine_file_path.split("/")[-1]
+    random_inputs = np.random.randn(n, 3, 224, 224).astype(np.float32)
     with get_engine(onnx_file_path, engine_file_path) as engine, engine.create_execution_context() as context:
         inputs, outputs, bindings, stream = common.allocate_buffers(engine)
         # Do inference
-        print('Running inference on random images')
+        print('Running inference on {} random images'.format(n))
         start = timer()
         # Set host input to the image. The common.do_inference function will copy the input to the GPU before executing.
-        for _ in range(n):
-            inputs[0].host = np.random.randn(1, 3, 224, 224).astype(np.float32)
+        for i in range(n):
+            inputs[0].host = random_inputs[i]
             # [0] ok since all our models have just one output? (or many outputs in terms of scalar, but not in terms of layers)
             trt_outputs.append(common.do_inference_v2(context, bindings=bindings, inputs=inputs, outputs=outputs, stream=stream)[0])
 
-        print(f'{name} inference time (msec): {(timer() - start)*1000 / n:.5f}')
+        inference_time = (timer() - start)*1000 / n
+        print(f'{name} inference time (msec): {inference_time:.5f}')
     # Before doing post-processing, we need to reshape the outputs as the common.do_inference will give us flat arrays.
     # print(trt_outputs[0].shape)
-    return outputs
+    return trt_outputs, inference_time
 
 if __name__ == '__main__':
-    args = argparse.ArgumentParser()
-    args.add_argument('-onnx_model_path', type=str, help='ONNX Model path.') # Example: "/l/dippa_main/dippa/thesis_code/models/resnet50/resnet50.onnx"
-    args.add_argument('-trt_model_path', type=str, help='TRT Model path.') # Example: "/l/dippa_main/dippa/thesis_code/models/resnet50/resnet50.trt"
-    args.add_argument('-cpu', default=False, type=bool, help='Using CPU or not.')
-    args.add_argument('-n', default=1000, type=int, help='How many inputs to run the model on.')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-onnx_model_path', type=str, help='ONNX Model path.') # Example: "/l/dippa_main/dippa/thesis_code/models/resnet50/resnet50.onnx"
+    parser.add_argument('-trt_model_path', default="", type=str, help='TRT Model path.') # Example: "/l/dippa_main/dippa/thesis_code/models/resnet50/resnet50.trt"
+    parser.add_argument('-cpu', default=False, type=bool, help='Using CPU or not.')
+    parser.add_argument('-n', default=1000, type=int, help='How many inputs to run the model on.')
     # supply data size here? like with an if statement depending on model?
-    parser = args.parse_args()
-    run_tensorrt_inference(args.onnx_model_path, trt_model_path, args.n)
+    args = parser.parse_args()
+    run_tensorrt_inference(args.onnx_model_path, args.trt_model_path, args.n)
     # main()

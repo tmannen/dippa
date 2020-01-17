@@ -185,7 +185,14 @@ Dippa notes (image in gmail):
 - WEIRD: time_tensorrt first gave about 6.2msec per image, but after a few tried went down to 5.4msec and stays there?
 - TODO: build onnx_runtime again when leaving today? compare to tensorrt on wednesday?
 - TENSORRT: best practices: https://docs.nvidia.com/deeplearning/sdk/tensorrt-best-practices/index.html#optimize-python lots of stuff, how to optimize the best? :( does tensorrt onnx parser do this automatically? 
-- TODO:
+- TODO: graphs, tensorrt timing finish. calculate number of parameters?
+- TODO, WRITING: tables with models
+- NOTE: Pytorch doesnt support quantization with GPUs (cuda): https://pytorch.org/docs/stable/quantization.html
+- BIG NOTE: wow, if you precreate random inputs or create them within the loop, the difference is 50% speed
+- WRITING: kerro jotain "resnet50 useful because can be used as a backbone, eg. the filters are reused blaablaa"
+- TODO: kokeile myös torch.randn generaatiota loopin sisällä ja ilman, onko ero yhtä suuri?
+- TODO: how to create graphs from times? check the good paper: https://synergy.ece.gatech.edu/wp-content/uploads/sites/332/2019/09/ml-edge-devices_iiswc2019.pdf. how to save trt pytorch etc nicely to same csv? maybe just own csvs for each framework, then another file for fusing these?
+- TODO: accuracy checking finally.
 
 # Misc Notes
 
