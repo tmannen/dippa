@@ -193,6 +193,7 @@ Dippa notes (image in gmail):
 - TODO: kokeile myös torch.randn generaatiota loopin sisällä ja ilman, onko ero yhtä suuri?
 - TODO: how to create graphs from times? check the good paper: https://synergy.ece.gatech.edu/wp-content/uploads/sites/332/2019/09/ml-edge-devices_iiswc2019.pdf. how to save trt pytorch etc nicely to same csv? maybe just own csvs for each framework, then another file for fusing these?
 - TODO: accuracy checking finally.
+- CHECK: https://news.ycombinator.com/item?id=22084951 accurate timing in python?
 
 # Misc Notes
 
