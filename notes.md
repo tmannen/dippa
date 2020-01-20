@@ -195,6 +195,11 @@ Dippa notes (image in gmail):
 - TODO: accuracy checking finally.
 - CHECK: https://news.ycombinator.com/item?id=22084951 accurate timing in python?
 
+## 20.01.2020
+
+- FasterRCNN bug: onnx export not working in current pytorch? mention this in the paper? TODO? since it has custom ops or something i guess? normal torch saving is not working either.
+- TODO: take input size from config? lstm tensorrt not working properly. TODO: test first the lstm normal model itself, how does it actually work..? in pytorch
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?

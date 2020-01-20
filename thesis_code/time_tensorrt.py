@@ -7,6 +7,7 @@ import tensorrt as trt
 import sys, os
 import trt_common as common
 import argparse
+import utils
 from timeit import default_timer as timer
 
 TRT_LOGGER = trt.Logger()
@@ -65,7 +66,7 @@ def run_tensorrt_inference(onnx_file_path, engine_file_path, n=1000):
         # Set host input to the image. The common.do_inference function will copy the input to the GPU before executing.
         for i in range(n):
             inputs[0].host = random_inputs[i]
-            # [0] ok since all our models have just one output? (or many outputs in terms of scalar, but not in terms of layers)
+            # [0] ok since all our models have just one output? (or many outputs in terms of scalars, but not in terms of layers)
             trt_outputs.append(common.do_inference_v2(context, bindings=bindings, inputs=inputs, outputs=outputs, stream=stream)[0])
 
         inference_time = (timer() - start)*1000 / n
@@ -74,13 +75,17 @@ def run_tensorrt_inference(onnx_file_path, engine_file_path, n=1000):
     # print(trt_outputs[0].shape)
     return trt_outputs, inference_time
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-onnx_model_path', type=str, help='ONNX Model path.') # Example: "/l/dippa_main/dippa/thesis_code/models/resnet50/resnet50.onnx"
     parser.add_argument('-trt_model_path', default="", type=str, help='TRT Model path.') # Example: "/l/dippa_main/dippa/thesis_code/models/resnet50/resnet50.trt"
     parser.add_argument('-cpu', default=False, type=bool, help='Using CPU or not.')
     parser.add_argument('-n', default=1000, type=int, help='How many inputs to run the model on.')
-    # supply data size here? like with an if statement depending on model?
     args = parser.parse_args()
-    run_tensorrt_inference(args.onnx_model_path, args.trt_model_path, args.n)
+    dir_path = "/".join(args.onnx_model_path.split("/")[:-1])
+    name = args.onnx_model_path.split("/")[-1].split(".")[0]
+    # supply data size here? like with an if statement depending on model?
+    trt_outputs, time = run_tensorrt_inference(args.onnx_model_path, args.trt_model_path, args.n)
+    utils.save_results(dir_path, "tensorrt", name, str(time))
     # main()

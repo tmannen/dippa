@@ -28,7 +28,7 @@ def export_resnet50(dir_path):
     # What about opset versions?
     torch.save(model, torch_model_path)
     torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=11)
-    save_metadata(model, name, dir_path, input_size)
+    save_metadata(model, name, full_path, input_size)
 
 def export_fasterRCNN(dir_path):
     """
@@ -43,11 +43,13 @@ def export_fasterRCNN(dir_path):
     os.makedirs(full_path, exist_ok=True)
     model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
     model.eval()
-    x = torch.randn(1, 3, 224, 224, requires_grad=True)
+    input_size = [1, 3, 224, 224]
+    x = torch.randn(input_size, requires_grad=True)
     out = model(x)
     # What about opset versions?
     torch.save(model, torch_model_path)
     torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=11)
+    save_metadata(model, name, full_path, input_size)
 
 def export_squeezenet(dir_path):
     name = "squeezenet"
@@ -57,11 +59,13 @@ def export_squeezenet(dir_path):
     os.makedirs(full_path, exist_ok=True)
     model = torchvision.models.squeezenet1_0(pretrained=True)
     model.eval()
-    x = torch.randn(1, 3, 224, 224, requires_grad=True)
+    input_size = [1, 3, 224, 224]
+    x = torch.randn(input_size, requires_grad=True)
     out = model(x)
     # What about opset versions?
     torch.save(model, torch_model_path)
     torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=11)
+    save_metadata(model, name, full_path, input_size)
 
 def export_lstm(dir_path):
     name = "lstm"
@@ -70,11 +74,12 @@ def export_lstm(dir_path):
     torch_model_path = os.path.join(full_path, name + ".pt")
     os.makedirs(full_path, exist_ok=True)
     layer_count = 4
+    input_size = [5, 3, 10]
 
     model = nn.LSTM(10, 20, num_layers=layer_count, bidirectional=True)
 
     with torch.no_grad():
-        input = torch.randn(5, 3, 10)
+        input = torch.randn(input_size)
         h0 = torch.randn(layer_count * 2, 3, 20)
         c0 = torch.randn(layer_count * 2, 3, 20)
         output, (hn, cn) = model(input, (h0, c0))
@@ -95,6 +100,8 @@ def export_lstm(dir_path):
         # onnx_model = onnx.load('lstm.onnx')
         # input shape ['sequence', 3, 10]
         # print(onnx_model.graph.input[0])
+    
+    save_metadata(model, name, full_path, input_size)
 
 def calculate_parameters(model):
     return sum(p.numel() for p in model.parameters())
