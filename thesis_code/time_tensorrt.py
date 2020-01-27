@@ -8,6 +8,7 @@ import sys, os
 import trt_common as common
 import argparse
 import utils
+#import utils
 from timeit import default_timer as timer
 
 TRT_LOGGER = trt.Logger()
@@ -18,7 +19,7 @@ def get_engine(onnx_file_path, engine_file_path):
     def build_engine():
         """Takes an ONNX file and creates a TensorRT engine to run inference with"""
         with trt.Builder(TRT_LOGGER) as builder, builder.create_network(common.EXPLICIT_BATCH) as network, trt.OnnxParser(network, TRT_LOGGER) as parser:
-            builder.max_workspace_size = 1 << 28 # 256MiB
+            builder.max_workspace_size = 1 << 30 # 256MiB
             builder.max_batch_size = 1
             # Parse model file
             if not os.path.exists(onnx_file_path):
@@ -33,6 +34,7 @@ def get_engine(onnx_file_path, engine_file_path):
                         print (parser.get_error(error))
                     return None
             # The actual yolov3.onnx is generated with batch size 64. Reshape input to batch size 1
+            print("jee")
             network.get_input(0).shape = [1, 3, 224, 224]
             print('Completed parsing of ONNX file')
             print('Building an engine from file {}; this may take a while...'.format(onnx_file_path))
@@ -50,14 +52,14 @@ def get_engine(onnx_file_path, engine_file_path):
     else:
         return build_engine()
 
-def run_tensorrt_inference(onnx_file_path, engine_file_path, n=1000):
+def run_tensorrt_inference(engine_file_path, random_inputs, onnx_file_path=None):
     """
     Run inference on n random inputs? maybe define inputs later?
     """
     # Define inputs too? since some models have different shapes of inputs
     trt_outputs = []
     name = engine_file_path.split("/")[-1]
-    random_inputs = np.random.randn(n, 3, 224, 224).astype(np.float32)
+    #random_inputs = np.random.randn(n, 3, 224, 224).astype(np.float32)
     with get_engine(onnx_file_path, engine_file_path) as engine, engine.create_execution_context() as context:
         inputs, outputs, bindings, stream = common.allocate_buffers(engine)
         # Do inference
@@ -67,7 +69,8 @@ def run_tensorrt_inference(onnx_file_path, engine_file_path, n=1000):
         for i in range(n):
             inputs[0].host = random_inputs[i]
             # [0] ok since all our models have just one output? (or many outputs in terms of scalars, but not in terms of layers)
-            trt_outputs.append(common.do_inference_v2(context, bindings=bindings, inputs=inputs, outputs=outputs, stream=stream)[0])
+            out = common.do_inference_v2(context, bindings=bindings, inputs=inputs, outputs=outputs, stream=stream)
+            trt_outputs.append(out[0])
 
         inference_time = (timer() - start)*1000 / n
         print(f'{name} inference time (msec): {inference_time:.5f}')
@@ -75,17 +78,21 @@ def run_tensorrt_inference(onnx_file_path, engine_file_path, n=1000):
     # print(trt_outputs[0].shape)
     return trt_outputs, inference_time
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-onnx_model_path', type=str, help='ONNX Model path.') # Example: "/l/dippa_main/dippa/thesis_code/models/resnet50/resnet50.onnx"
+    parser.add_argument('-onnx_model_path', type=str, default=None, help='ONNX Model path.') # Example: "/l/dippa_main/dippa/thesis_code/models/resnet50/resnet50.onnx"
     parser.add_argument('-trt_model_path', default="", type=str, help='TRT Model path.') # Example: "/l/dippa_main/dippa/thesis_code/models/resnet50/resnet50.trt"
     parser.add_argument('-cpu', default=False, type=bool, help='Using CPU or not.')
     parser.add_argument('-n', default=1000, type=int, help='How many inputs to run the model on.')
+    parser.add_argument('-input_size', type=int, nargs='+', help='Input size (for ex. 3 224 224)', default=[3, 224, 224])
+    # TODO: add -log boolean to args which defaults to False so the outputs are not logged if not wanted
     args = parser.parse_args()
+    n = args.n
+    input_size = [n] + args.input_size
+    random_inputs = np.random.randn(*input_size).astype(np.float32)
     dir_path = "/".join(args.onnx_model_path.split("/")[:-1])
     name = args.onnx_model_path.split("/")[-1].split(".")[0]
     # supply data size here? like with an if statement depending on model?
-    trt_outputs, time = run_tensorrt_inference(args.onnx_model_path, args.trt_model_path, args.n)
-    utils.save_results(dir_path, "tensorrt", name, str(time))
+    trt_outputs, inference_time = run_tensorrt_inference(args.trt_model_path, random_inputs, args.onnx_model_path)
+    utils.save_results(dir_path, "tensorrt", name, str(inference_time), args.n)
     # main()

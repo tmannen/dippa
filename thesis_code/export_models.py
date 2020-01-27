@@ -61,10 +61,11 @@ def export_squeezenet(dir_path):
     model.eval()
     input_size = [1, 3, 224, 224]
     x = torch.randn(input_size, requires_grad=True)
-    out = model(x)
+    #out = model(x)
     # What about opset versions?
     torch.save(model, torch_model_path)
-    torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=11)
+    # Tensorrt segmentation fault with opset version 11?
+    torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=9)
     save_metadata(model, name, full_path, input_size)
 
 def export_lstm(dir_path):
@@ -123,7 +124,7 @@ if __name__ == '__main__':
     args = argparse.ArgumentParser()
     args.add_argument('-path', type=str, help='Directory where models are saved.')
     parser = args.parse_args()
-    export_resnet50(parser.path)
-    export_lstm(parser.path)
+    #export_resnet50(parser.path)
+    #export_lstm(parser.path)
     export_squeezenet(parser.path)
     #export_fasterRCNN(parser.path)

@@ -199,6 +199,22 @@ Dippa notes (image in gmail):
 
 - FasterRCNN bug: onnx export not working in current pytorch? mention this in the paper? TODO? since it has custom ops or something i guess? normal torch saving is not working either.
 - TODO: take input size from config? lstm tensorrt not working properly. TODO: test first the lstm normal model itself, how does it actually work..? in pytorch
+- tensorflow also has quantizations and shit?: https://github.com/IntelAI/models/tree/master/benchmarks/image_recognition/tensorflow/resnet50
+- https://blog.tensorflow.org/2019/06/high-performance-inference-with-TensorRT.html tf seems to have good tensorrt integration ;(
+- TODO: jatka utils.timing thing. 
+
+## 24.01.2020
+
+- Problems with TENSORRT: trying to put inputs in a loop, the same image is used every time?
+- TENSORRT: the execution context takes time? should prolly be mentioned?
+- TENSORRT: can't run for many inputs in a row? we allocate memory for one output and if we run ten times in a row and get out of the context, the output is only the last one since it's the last one that's in memory? (found out by running on ten inputs in a for loop - tried to append the outputs in a list, but the every output was the same - the last one. does this matter in practise? if we use the output immediately, no. but if we want to store it, we need to copy to memory and this takes time so tensorrt is not much faster maybe?)
+- TODO: models.py, add LSTM model, the current one doesn't use nn.Module?
+- TODO: time_pytorch jatka että toimii
+- TODO: kun trt ja pt ajat kahdella mallilla, kokeile graph sen paperin tyylisesti. (utils.py graph)
+
+## 27.01.2020
+
+- TENSORRT/PYTORCH problem: when trying squeezenet with opset 11 onnx export, segmentation fault. when with opset version 9, everything works.
 
 # Misc Notes
 
