@@ -1,10 +1,12 @@
-import pandas
+import pandas as pd
 import numpy as np
 import os
 import csv
-import time_tensorrt
+#import time_tensorrt
 import time_pytorch
 import torch
+import seaborn as sns
+import matplotlib as plt
 
 def save_results(path, engine, model, time, n):
     # CSV with fields (engine, model, time, n)? appends to csv?
@@ -14,9 +16,15 @@ def save_results(path, engine, model, time, n):
         writer = csv.writer(f)
         writer.writerow(fields)
 
-def graph_results():
+def graph_results(results_path):
     # make a bar graph from results.csv? results has fields engine,model,time,n
-    pass
+    datas = pd.read_csv("results_test.csv", header=None)
+    datas.columns = datas.columns = ["method", "model", "time", "n"] # Note: not needed if we add headers to csv
+    sns.set(style="whitegrid")
+    g = sns.catplot(x="model", y="time", hue="method", data=datas, kind="bar")
+    g.set_ylabels("Time (milliseconds)")
+    plt.show()
+
 
 def compare_accuracy_pt_trt(pt_model_path, trt_model_path, input_size, n=1000, onnx_model_path=None):
     # Needs the two models and what they're using (pytorch, tensorrt)? cool way would be to wrap in a predict() function and just call that
