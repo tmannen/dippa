@@ -216,6 +216,10 @@ Dippa notes (image in gmail):
 
 - TENSORRT/PYTORCH problem: when trying squeezenet with opset 11 onnx export, segmentation fault. when with opset version 9, everything works.
 
+## 30.01.2020
+
+- TODO: make LSTM model work
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?
