@@ -26,8 +26,8 @@ tag_to_ix = {"DET": 0, "NN": 1, "V": 2}
 
 # These will usually be more like 32 or 64 dimensional.
 # We will keep them small, so we can see how the weights change as we train.
-EMBEDDING_DIM = 6
-HIDDEN_DIM = 6
+EMBEDDING_DIM = 32
+HIDDEN_DIM = 32
 
 # TODO: continue from https://pytorch.org/tutorials/beginner/nlp/sequence_models_tutorial.html?
 class LSTMTagger(nn.Module):
@@ -100,3 +100,9 @@ with torch.no_grad():
 
 print("inputs shape:", inputs.shape)
 print(model)
+
+torch.onnx.export(model, (input, (h0, c0)), "test.onnx",
+                        input_names=['input', 'h0', 'c0'],
+                        output_names=['output', 'hn', 'cn'],
+                        dynamic_axes={'input': {0: 'sequence'}, 'output': {0: 'sequence'}},
+                        opset_version=11)
