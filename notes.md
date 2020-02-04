@@ -236,6 +236,12 @@ Dippa notes (image in gmail):
 - in the models/tools chart add: cpu, gpu maybe? and whether it even works? ease of deployment (with stars like in that paper)?
 - TODO: check if openvino time thing is correct, try squeezenet with it. try pytorch cpu whether openvino brought any improvements.
 
+## 04.02.2020
+
+- TODO: take CPU/GPU utilization when running models?
+- TODO: take a model with larger image input to compare?
+- 
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?
