@@ -8,10 +8,10 @@ import torch
 import seaborn as sns
 import matplotlib as plt
 
-def save_results(path, engine, model, time, n):
+def save_results(path, engine, model, time, n, device):
     # CSV with fields (engine, model, time, n)? appends to csv?
     save_path = os.path.join(path, "results.csv")
-    fields = [engine, model, time, n]
+    fields = [engine, model, time, n, device]
     with open(save_path, 'a') as f:
         writer = csv.writer(f)
         writer.writerow(fields)

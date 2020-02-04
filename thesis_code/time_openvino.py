@@ -28,11 +28,11 @@ from timeit import default_timer as timer
 import argparse
 from openvino.inference_engine import IENetwork, IECore
 
-def run_openvino_inference(xml_model_path, device, inputs):
-    model_xml = "/l/dippa_main/dippa/thesis_code/models/resnet50/resnet50.xml"
+def run_openvino_inference(model_xml, inputs, device="cpu"):
     model_bin = os.path.splitext(model_xml)[0] + ".bin"
     log.info("Creating Inference Engine")
     ie = IECore()
+    n = len(inputs)
     #if args.cpu_extension and 'CPU' in args.device:
     #    ie.add_extension(args.cpu_extension, "CPU")
     # Read IR
@@ -69,13 +69,13 @@ def run_openvino_inference(xml_model_path, device, inputs):
         ov_outputs.append(out[out_blob])
 
     inference_time = (timer() - start)*1000 / n
-    print(f'{name} inference time (msec): {inference_time:.5f}')
+    print(f'inference time (msec): {inference_time:.5f}')
     log.info("Batch size is {}".format(n))
     return ov_outputs, inference_time
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-xml_model_path', type=str, default=None, help='ONNX Model path.') # requires model.bin in the same folder
+    parser.add_argument('-model_xml', type=str, default=None, help='XML Model path.') # requires model.bin (weights) in the same folder
     parser.add_argument('-device', default="CPU", type=str, help='Using CPU or not.')
     parser.add_argument('-n', default=1000, type=int, help='How many inputs to run the model on.')
     parser.add_argument('-input_size', type=int, nargs='+', help='Input size (for ex. 3 224 224)', default=[3, 224, 224])
@@ -84,9 +84,9 @@ if __name__ == '__main__':
     n = args.n
     input_size = [n] + args.input_size
     random_inputs = np.random.randn(*input_size).astype(np.float32)
-    dir_path = "/".join(args.xml_model_path.split("/")[:-1])
-    name = args.xml_model_path.split("/")[-1].split(".")[0]
+    dir_path = "/".join(args.model_xml.split("/")[:-1])
+    name = args.model_xml.split("/")[-1].split(".")[0]
     # supply data size here? like with an if statement depending on model?
-    ov_outputs, inference_time = run_openvino_inference(args.xml_model_path, args.device, random_inputs)
+    ov_outputs, inference_time = run_openvino_inference(args.model_xml, args.device, random_inputs)
     #utils.save_results(dir_path, "openvino", name, str(inference_time), args.n)
     # main()

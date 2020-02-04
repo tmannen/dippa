@@ -11,22 +11,19 @@ import utils
 from torch import cuda
 from timeit import default_timer as timer
 
-def run_pytorch_inference(pytorch_model_path, random_inputs):
-    device = 'cuda' if cuda.is_available() else 'cpu'
+def run_pytorch_inference(pytorch_model_path, random_inputs, device='cpu'):
     model = torch.load(pytorch_model_path)
     model.eval()
     net = model.to(device)
     name = pytorch_model_path.split("/")[-1]
     n = len(random_inputs)
     outputs = []
-    random_inputs = torch.from_numpy(random_inputs)
+    random_inputs = torch.from_numpy(np.expand_dims(random_inputs, 1)).to(device)
 
     start = timer()
     with torch.no_grad():
-        for random_input in random_inputs:
-            #data = torch.randn(1, 3, 224, 224).to(device)
-            data = random_input.unsqueeze(0).to(device)
-            outputs.append(net(data))
+        for i in range(n):
+            outputs.append(net(random_inputs[i]))
     
     inference_time = (timer() - start)*1000 / n
     print(f'{name} inference time (msec): {inference_time:.5f}')

@@ -240,7 +240,13 @@ Dippa notes (image in gmail):
 
 - TODO: take CPU/GPU utilization when running models?
 - TODO: take a model with larger image input to compare?
-- 
+- WRITING: "pytorch was chosen due to its official support of ONNX" maybe? though most tools also support tensorflow? mention pytorch to tf converters?
+- TODO: does results csv need different optimization things? probably yeah. for example fp16, fp32 etc? and cpu, gpu?
+- variance of inference times?
+- TODO: symbolic link to mo_onnx to dippa folder?
+- TODO: check optimizations?
+- TODO: pytorch cpu DONE
+- TODO: get some imagenet images for testing accuracy? check imagenet downloader in /l/software, seems to work well.
 
 # Misc Notes
 

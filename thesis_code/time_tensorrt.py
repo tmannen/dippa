@@ -58,6 +58,7 @@ def run_tensorrt_inference(engine_file_path, random_inputs, onnx_file_path=None)
     """
     # Define inputs too? since some models have different shapes of inputs
     trt_outputs = []
+    n = len(random_inputs)
     name = engine_file_path.split("/")[-1]
     #random_inputs = np.random.randn(n, 3, 224, 224).astype(np.float32)
     with get_engine(onnx_file_path, engine_file_path) as engine, engine.create_execution_context() as context:
