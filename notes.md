@@ -158,7 +158,7 @@ Dippa notes (image in gmail):
     - especially "source /opt/intel/openvino/bin/setupvars.sh (maybe put in .bashrc?)" NOTE remember to do this before building? if using openvino
 
 - Installing ngraph (no need for onnx runtime? but needed if I want to do it myself?) TODO?
-- Big build command using most backends: ```./build.sh --config RelWithDebInfo --cudnn_home /usr/include --cuda_home /usr/local/cuda --use_tensorrt --tensorrt_home /l/software/TensorRT-6.0.1.5 --use_dnnl --use_ngraph --use_openvino GPU_FP32 --build_wheel --update --build --enable_pybind```
+- Big build command using most backends (onnx runtime): ```./build.sh --config RelWithDebInfo --cudnn_home /usr/include --cuda_home /usr/local/cuda --use_tensorrt --tensorrt_home /l/software/TensorRT-6.0.1.5 --use_dnnl --use_ngraph --use_openvino GPU_FP32 --build_wheel --update --build --enable_pybind```
 
 ## 07.01.2020
 
@@ -224,6 +224,18 @@ Dippa notes (image in gmail):
 
 - 
 
+## 03.02.2020
+
+- Finish LSTM
+- install and try openvino with the 3 models?
+- install and try nraph with the 3 models?
+- Getting warnings when exporting LSTM[1] TODO: kinda weird, for example didnt try with tensorrt yet. do that after openvino, ngraph and others are set up? then start with additional models?
+- Openvino notes: remember to run "source /opt/intel/openvino/bin/setupvars.sh". opencv requires "pip install opencv-python". First ran "python /opt/intel/openvino/deployment_tools/model_optimizer/mo_onnx.py --input_model resnet50.onnx" to convert the model. then ran "python openvino_test.py" in the thesis_code folder (copied mostly from openvino python classification sample). how to do custom optimizations? maybe https://docs.openvinotoolkit.org/2018_R5/_docs_MO_DG_prepare_model_Config_Model_Optimizer.html
+- ONNX apparenly has model zoo: https://github.com/onnx/models with many different models - try these too if they work with trt etc? if these work and pt exported not, something wrong with exporting? but also important with interoperability.
+- state of the art(?) transformers: https://github.com/huggingface/transformers#Quick-tour-TF-20-training-and-PyTorch-interoperability.
+- in the models/tools chart add: cpu, gpu maybe? and whether it even works? ease of deployment (with stars like in that paper)?
+- TODO: check if openvino time thing is correct, try squeezenet with it. try pytorch cpu whether openvino brought any improvements.
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?
@@ -269,3 +281,15 @@ use cases for edge computing:
 
 cool stuff: https://microsoft.github.io/onnxruntime/auto_examples/plot_profiling.html
 
+[1]
+
+/l/anaconda3/lib/python3.7/site-packages/torch/serialization.py:292: UserWarning: Couldn't retrieve source code for container of type LSTMTagger. It won't be checked for correctness upon loading.
+  "type " + obj.__name__ + ". It won't be checked "
+/l/anaconda3/lib/python3.7/site-packages/torch/serialization.py:292: UserWarning: Couldn't retrieve source code for container of type Embedding. It won't be checked for correctness upon loading.
+  "type " + obj.__name__ + ". It won't be checked "
+/l/anaconda3/lib/python3.7/site-packages/torch/serialization.py:292: UserWarning: Couldn't retrieve source code for container of type LSTM. It won't be checked for correctness upon loading.
+  "type " + obj.__name__ + ". It won't be checked "
+/l/anaconda3/lib/python3.7/site-packages/torch/serialization.py:292: UserWarning: Couldn't retrieve source code for container of type Linear. It won't be checked for correctness upon loading.
+  "type " + obj.__name__ + ". It won't be checked "
+/l/anaconda3/lib/python3.7/site-packages/torch/onnx/symbolic_opset9.py:1377: UserWarning: Exporting a model to ONNX with a batch_size other than 1, with a variable lenght with LSTM can cause an error when running the ONNX model with a different batch size. Make sure to save the model with a batch size of 1, or define the initial states (h0/c0) as inputs of the model. 
+  "or define the initial states (h0/c0) as inputs of the model. ")

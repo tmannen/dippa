@@ -14,6 +14,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 import os
 import argparse
+import models
 
 def export_resnet50(dir_path):
     name = "resnet50"
@@ -74,35 +75,39 @@ def export_lstm(dir_path):
     onnx_model_path = os.path.join(full_path, name + ".onnx")
     torch_model_path = os.path.join(full_path, name + ".pt")
     os.makedirs(full_path, exist_ok=True)
-    layer_count = 4
-    input_size = [5, 3, 10]
 
-    model = nn.LSTM(10, 20, num_layers=layer_count, bidirectional=True)
+    ### stuff to get input nicely, from: https://pytorch.org/tutorials/beginner/nlp/sequence_models_tutorial.html?
+    def prepare_sequence(seq, to_ix):
+        idxs = [to_ix[w] for w in seq]
+        return torch.tensor(idxs, dtype=torch.long)
+
+    training_data = [
+        ("The dog ate the apple".split(), ["DET", "NN", "V", "DET", "NN"]),
+        ("Everybody read that book".split(), ["NN", "V", "DET", "NN"])
+    ]
+    word_to_ix = {}
+    for sent, tags in training_data:
+        for word in sent:
+            if word not in word_to_ix:
+                word_to_ix[word] = len(word_to_ix)
+    print(word_to_ix)
+    tag_to_ix = {"DET": 0, "NN": 1, "V": 2}
+
+    # These will usually be more like 32 or 64 dimensional.
+    # We will keep them small, so we can see how the weights change as we train.
+    EMBEDDING_DIM = 32
+    HIDDEN_DIM = 32
+
+    model = models.LSTMTagger(EMBEDDING_DIM, HIDDEN_DIM, len(word_to_ix), len(tag_to_ix))
+
+    inputs = prepare_sequence(training_data[0][0], word_to_ix)
 
     with torch.no_grad():
-        input = torch.randn(input_size)
-        h0 = torch.randn(layer_count * 2, 3, 20)
-        c0 = torch.randn(layer_count * 2, 3, 20)
-        output, (hn, cn) = model(input, (h0, c0))
-
-        # default export
-        #torch.onnx.export(model, (input, (h0, c0)), 'lstm.onnx')
-        #onnx_model = onnx.load('lstm.onnx')
-        # input shape [5, 3, 10]
-        # print(onnx_model.graph.input[0])
-
         # export with `dynamic_axes`
-        torch.save(model.state_dict, torch_model_path)
-        torch.onnx.export(model, (input, (h0, c0)), onnx_model_path,
-                        input_names=['input', 'h0', 'c0'],
-                        output_names=['output', 'hn', 'cn'],
-                        dynamic_axes={'input': {0: 'sequence'}, 'output': {0: 'sequence'}},
-                        opset_version=11)
-        # onnx_model = onnx.load('lstm.onnx')
-        # input shape ['sequence', 3, 10]
-        # print(onnx_model.graph.input[0])
+        torch.save(model, torch_model_path)
+        torch.onnx.export(model, inputs, onnx_model_path, opset_version=9)
     
-    save_metadata(model, name, full_path, input_size)
+    save_metadata(model, name, full_path, "Variable")
 
 def calculate_parameters(model):
     return sum(p.numel() for p in model.parameters())
