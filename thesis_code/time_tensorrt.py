@@ -11,16 +11,17 @@ import utils
 #import utils
 from timeit import default_timer as timer
 
-TRT_LOGGER = trt.Logger()
+TRT_LOGGER = trt.Logger(trt.Logger.INFO)
 
-def get_engine(onnx_file_path, engine_file_path):
+def get_engine(onnx_file_path, engine_file_path, rebuild=True):
     """Attempts to load a serialized engine if available, otherwise builds a new TensorRT engine and saves it."""
     print("Explicit batch: ", common.EXPLICIT_BATCH)
     def build_engine():
         """Takes an ONNX file and creates a TensorRT engine to run inference with"""
         with trt.Builder(TRT_LOGGER) as builder, builder.create_network(common.EXPLICIT_BATCH) as network, trt.OnnxParser(network, TRT_LOGGER) as parser:
-            builder.max_workspace_size = 1 << 30 # 256MiB
+            builder.max_workspace_size = 1 << 31 # 2048MB?
             builder.max_batch_size = 1
+            builder.int8_mode = True
             # Parse model file
             if not os.path.exists(onnx_file_path):
                 print('ONNX file {} not found.'.format(onnx_file_path))
@@ -44,7 +45,7 @@ def get_engine(onnx_file_path, engine_file_path):
                 f.write(engine.serialize())
             return engine
     
-    if os.path.exists(engine_file_path):
+    if os.path.exists(engine_file_path) and not rebuild:
         # If a serialized engine exists, use it instead of building an engine.
         print("Reading engine from file {}".format(engine_file_path))
         with open(engine_file_path, "rb") as f, trt.Runtime(TRT_LOGGER) as runtime:

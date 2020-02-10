@@ -248,6 +248,14 @@ Dippa notes (image in gmail):
 - TODO: pytorch cpu DONE
 - TODO: get some imagenet images for testing accuracy? check imagenet downloader in /l/software, seems to work well.
 
+## 10.02.2020
+
+- TODO: lstm export still kinda weird, need dynamic axes maybe?
+- TODO: test yolo, fully connected exports whether they work in tools
+- TODO: write about some of the errors? like couldnt retrieve source code, some ops not supported in opset 9 etc. when exporting to onnx
+- TODO: tensorflow testing? might be faster and it has its own optimizer and all? all models should have something in model zoo? also keras is similar
+- TODO: tensorrt int8 calibration? pitää kait ladata imagenet validation data. sitten voi käyttää tenosrrt-utils fileä jossa muuttaa onnxstä tähän trthen ja sillä voi tehdä kaikenlaista? linkkejä: https://github.com/rmccorm4/tensorrt-utils/blob/20.01/classification/imagenet/onnx_to_tensorrt.py, http://www.image-net.org/signup.php?next=download-images, tensorrt kalibraatio vinkkejä: https://devtalk.nvidia.com/default/topic/1048834/tensorrt/tensorrt-5-int8-calibration-example/
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?

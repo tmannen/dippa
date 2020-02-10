@@ -14,22 +14,10 @@ import torch.nn.functional as F
 import torch.optim as optim
 import os
 import argparse
-import models
-
-def export_resnet50(dir_path):
-    name = "resnet50"
-    full_path = os.path.join(dir_path, name)
-    onnx_model_path = os.path.join(full_path, name + ".onnx")
-    torch_model_path = os.path.join(full_path, name + ".pt")
-    os.makedirs(full_path, exist_ok=True)
-    model = torchvision.models.resnet50(pretrained=True)
-    model.eval()
-    input_size = [1, 3, 224, 224]
-    x = torch.randn(input_size, requires_grad=True)
-    # What about opset versions?
-    torch.save(model, torch_model_path)
-    torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=11)
-    save_metadata(model, name, full_path, input_size)
+# wonky sys thing required because yolo uses files in its own dir so this way the import works there
+import sys
+sys.path.append('model_definitions/')
+from model_definitions import yolo, fully_connected, lstm
 
 def export_fasterRCNN(dir_path):
     """
@@ -52,30 +40,25 @@ def export_fasterRCNN(dir_path):
     torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=11)
     save_metadata(model, name, full_path, input_size)
 
-def export_squeezenet(dir_path):
-    name = "squeezenet"
+
+def export_model(model, dir_path, name, opset_version, input_size):
     full_path = os.path.join(dir_path, name)
     onnx_model_path = os.path.join(full_path, name + ".onnx")
     torch_model_path = os.path.join(full_path, name + ".pt")
     os.makedirs(full_path, exist_ok=True)
-    model = torchvision.models.squeezenet1_0(pretrained=True)
+    if name == "lstm":
+        _, x = lstm_prep()
+        input_size = "Variable"
+    else:
+        x = torch.randn(input_size, requires_grad=True)
+
     model.eval()
-    input_size = [1, 3, 224, 224]
-    x = torch.randn(input_size, requires_grad=True)
-    #out = model(x)
-    # What about opset versions?
     torch.save(model, torch_model_path)
-    # Tensorrt segmentation fault with opset version 11?
-    torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=9)
+    torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=opset_version)
     save_metadata(model, name, full_path, input_size)
 
-def export_lstm(dir_path):
-    name = "lstm"
-    full_path = os.path.join(dir_path, name)
-    onnx_model_path = os.path.join(full_path, name + ".onnx")
-    torch_model_path = os.path.join(full_path, name + ".pt")
-    os.makedirs(full_path, exist_ok=True)
-
+def lstm_prep():
+    # Preps data and data sizes for lstm model
     ### stuff to get input nicely, from: https://pytorch.org/tutorials/beginner/nlp/sequence_models_tutorial.html?
     def prepare_sequence(seq, to_ix):
         idxs = [to_ix[w] for w in seq]
@@ -85,12 +68,12 @@ def export_lstm(dir_path):
         ("The dog ate the apple".split(), ["DET", "NN", "V", "DET", "NN"]),
         ("Everybody read that book".split(), ["NN", "V", "DET", "NN"])
     ]
+
     word_to_ix = {}
     for sent, tags in training_data:
         for word in sent:
             if word not in word_to_ix:
                 word_to_ix[word] = len(word_to_ix)
-    print(word_to_ix)
     tag_to_ix = {"DET": 0, "NN": 1, "V": 2}
 
     # These will usually be more like 32 or 64 dimensional.
@@ -98,21 +81,17 @@ def export_lstm(dir_path):
     EMBEDDING_DIM = 32
     HIDDEN_DIM = 32
 
-    model = models.LSTMTagger(EMBEDDING_DIM, HIDDEN_DIM, len(word_to_ix), len(tag_to_ix))
+    model = lstm.LSTMTagger(EMBEDDING_DIM, HIDDEN_DIM, len(word_to_ix), len(tag_to_ix))
 
     inputs = prepare_sequence(training_data[0][0], word_to_ix)
 
-    with torch.no_grad():
-        # export with `dynamic_axes`
-        torch.save(model, torch_model_path)
-        torch.onnx.export(model, inputs, onnx_model_path, opset_version=9)
+    return model, inputs
     
-    save_metadata(model, name, full_path, "Variable")
-
 def calculate_parameters(model):
     return sum(p.numel() for p in model.parameters())
 
 def save_metadata(model, name, dir_path, input_size):
+    # Writes some info about the model to a config file
     import configparser
     config = configparser.ConfigParser()
     num_parameters = calculate_parameters(model)
@@ -124,12 +103,31 @@ def save_metadata(model, name, dir_path, input_size):
 
     with open(os.path.join(dir_path, 'metadata.cfg'), 'w') as configfile:
         config.write(configfile)
+    
 
 if __name__ == '__main__':
     args = argparse.ArgumentParser()
     args.add_argument('-path', type=str, help='Directory where models are saved.')
+    args.add_argument('-model_name', type=str, help='Name of the model, e.g. "resnet50"')
+    args.add_argument('-opset', type=int, default=9, help='Which ONNX opset version to use')
     parser = args.parse_args()
-    #export_resnet50(parser.path)
-    #export_lstm(parser.path)
-    export_squeezenet(parser.path)
-    #export_fasterRCNN(parser.path)
+    model_name = parser.model_name
+    if model_name == "resnet50":
+        model = torchvision.models.resnet50(pretrained=True)
+        input_size = [1, 3, 224, 224]
+    elif model_name == "squeezenet":
+        model = torchvision.models.squeezenet1_0(pretrained=True)
+        input_size = [1, 3, 224, 224]
+    elif model_name == "lstm":
+        from model_definitions.lstm import LSTMTagger
+        model, _ = lstm_prep()
+        input_size = "Variable"
+    elif model_name == "yolo":
+        model = yolo.Darknet("model_definitions/config/yolov3.cfg")
+        model.load_darknet_weights("model_definitions/weights/yolov3.weights")
+        input_size = [1, 3, 224, 224]
+    elif model_name == "fully_connected":
+        model = fully_connected.FullyConnected()
+        input_size = 784
+        
+    export_model(model, parser.path, parser.model_name, parser.opset, input_size)
