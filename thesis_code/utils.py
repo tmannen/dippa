@@ -18,11 +18,12 @@ def save_results(path, engine, model, time, n, device):
 
 def graph_results(results_path):
     # make a bar graph from results.csv? results has fields engine,model,time,n
-    datas = pd.read_csv("results_test.csv", header=None)
-    datas.columns = datas.columns = ["method", "model", "time", "n"] # Note: not needed if we add headers to csv
+    datas = pd.read_csv(results_path, header=None)
+    datas.columns = ["method", "model", "time", "n", "device"] # Note: not needed if we add headers to csv
+    datas['method'] = datas['method'] + " (" + datas['device'] + ")"
     sns.set(style="whitegrid")
     g = sns.catplot(x="model", y="time", hue="method", data=datas, kind="bar")
-    g.set_ylabels("Time (milliseconds)")
+    g.set_ylabels("Average time per single inference(milliseconds)")
     plt.show()
 
 
@@ -37,6 +38,9 @@ def compare_accuracy_pt_trt(pt_model_path, trt_model_path, input_size, n=1000, o
     trt_outputs = time_tensorrt.run_tensorrt_inference(trt_model_path, random_inputs)
     trt_outputs = np.vstack(trt_outputs).squeeze()
     np.testing.assert_allclose(pytorch_outputs, trt_outputs, rtol=1e-03, atol=1e-05)
+
+def compare_accuracy(original_outputs, tool_outputs):
+    np.testing.assert_allclose(original_outputs, tool_outputs, rtol=1e-03, atol=1e-05)
 
 #compare_accuracy_pt_trt("/l/dippa_main/dippa/thesis_code/models/resnet50/resnet50.pt", 
 #                        "/l/dippa_main/dippa/thesis_code/models/resnet50/resnet50.trt", 

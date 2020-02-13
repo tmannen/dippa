@@ -4,7 +4,7 @@ import ngraph as ng
 import numpy as np
 from timeit import default_timer as timer
 
-def run_ngraph_inference(model_onnx, inputs, device='CPU'):
+def run_ngraph_inference(model_onnx, inputs, device):
     onnx_protobuf = onnx.load(model_onnx)
     ng_function = import_onnx_model(onnx_protobuf)
     runtime = ng.runtime(backend_name=device)

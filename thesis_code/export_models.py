@@ -55,7 +55,7 @@ def export_model(model, dir_path, name, opset_version, input_size):
     model.eval()
     torch.save(model, torch_model_path)
     torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=opset_version)
-    save_metadata(model, name, full_path, input_size)
+    save_metadata(model, name, full_path, input_size, opset_version)
 
 def lstm_prep():
     # Preps data and data sizes for lstm model
@@ -90,7 +90,7 @@ def lstm_prep():
 def calculate_parameters(model):
     return sum(p.numel() for p in model.parameters())
 
-def save_metadata(model, name, dir_path, input_size):
+def save_metadata(model, name, dir_path, input_size, onnx_opset):
     # Writes some info about the model to a config file
     import configparser
     config = configparser.ConfigParser()
@@ -98,7 +98,8 @@ def save_metadata(model, name, dir_path, input_size):
     config['DEFAULT'] = {
         'model': name,
         'num_parameters': num_parameters,
-        'input_size': input_size
+        'input_size': input_size,
+        'onnx_opset': onnx_opset
         }
 
     with open(os.path.join(dir_path, 'metadata.cfg'), 'w') as configfile:

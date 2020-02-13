@@ -13,7 +13,7 @@ from timeit import default_timer as timer
 
 TRT_LOGGER = trt.Logger(trt.Logger.INFO)
 
-def get_engine(onnx_file_path, engine_file_path, rebuild=True):
+def get_engine(onnx_file_path, engine_file_path, rebuild=False):
     """Attempts to load a serialized engine if available, otherwise builds a new TensorRT engine and saves it."""
     print("Explicit batch: ", common.EXPLICIT_BATCH)
     def build_engine():
@@ -21,7 +21,7 @@ def get_engine(onnx_file_path, engine_file_path, rebuild=True):
         with trt.Builder(TRT_LOGGER) as builder, builder.create_network(common.EXPLICIT_BATCH) as network, trt.OnnxParser(network, TRT_LOGGER) as parser:
             builder.max_workspace_size = 1 << 31 # 2048MB?
             builder.max_batch_size = 1
-            builder.int8_mode = True
+            #builder.int8_mode = True
             # Parse model file
             if not os.path.exists(onnx_file_path):
                 print('ONNX file {} not found.'.format(onnx_file_path))

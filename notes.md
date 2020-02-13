@@ -256,6 +256,14 @@ Dippa notes (image in gmail):
 - TODO: tensorflow testing? might be faster and it has its own optimizer and all? all models should have something in model zoo? also keras is similar
 - TODO: tensorrt int8 calibration? pitää kait ladata imagenet validation data. sitten voi käyttää tenosrrt-utils fileä jossa muuttaa onnxstä tähän trthen ja sillä voi tehdä kaikenlaista? linkkejä: https://github.com/rmccorm4/tensorrt-utils/blob/20.01/classification/imagenet/onnx_to_tensorrt.py, http://www.image-net.org/signup.php?next=download-images, tensorrt kalibraatio vinkkejä: https://devtalk.nvidia.com/default/topic/1048834/tensorrt/tensorrt-5-int8-calibration-example/
 
+## 12.02.2020
+
+- TODO: mainitse paperissa että jos vaan loadaa mallin ja tekee yhden imagen inferencen niin kestää vähän kauemmin koska jotain shittiä? esim yhellä imagella 7ms mutta 1000 imagen average 5ms
+- TODO: kirjoita kustakin optimization toolista että miten meni ja mitä tarvitsi jne.
+- TODO: maybe create models on the fly for pytorch instead of saving and loading? saving outputs some warnings sometimes, maybe the comparison would be wrong then too?
+- TODO: relative performance? could be interesting with larger/smaller models
+- TODO: tensorrt quantization? in tensorrt-utils in /l/software theres classification/imagenet/onnx_to_tensorrt.py thing that has many options
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?
