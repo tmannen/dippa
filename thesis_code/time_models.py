@@ -10,6 +10,10 @@ import utils
 from time_tensorrt import run_tensorrt_inference
 from time_pytorch import run_pytorch_inference
 from time_ngraph import run_ngraph_inference
+import pdb
+## This is for the YOLO model:
+import sys
+sys.path.append('model_definitions/')
 
 model_root_path = "/l/dippa_main/dippa/thesis_code/models/"
 
@@ -33,14 +37,14 @@ if __name__ == '__main__':
 
     ### take the outputs of the original pytorch model here to compare the outputs.
     ### NOTE assumes the original was made with pytorch.
-    #original_model_path = os.path.join(model_root_path, model, model + ".pt")
-    #original_outputs, _ = run_pytorch_inference(original_model_path, random_inputs)
+    original_model_path = os.path.join(model_root_path, model, model + ".pt")
+    original_outputs, _ = run_pytorch_inference(original_model_path, random_inputs)
     if method == "pytorch":
         model_path = os.path.join(model_root_path, model, model + ".pt")
         outputs, inference_time = run_pytorch_inference(model_path, random_inputs, device)
     elif method == "tensorrt":
         model_path = os.path.join(model_root_path, model, model + ".trt")
-        outputs, inference_time = run_tensorrt_inference(model_path, random_inputs, os.path.join(model_root_path, model, model + ".onnx"))
+        outputs, inference_time = run_tensorrt_inference(model_path, random_inputs, os.path.join(model_root_path, model, model + "_simplified.onnx"))
     elif method == "openvino":
         from time_openvino import run_openvino_inference
         model_path = os.path.join(model_root_path, model, model + ".xml")
@@ -49,7 +53,10 @@ if __name__ == '__main__':
         model_path = os.path.join(model_root_path, model, model + ".onnx")
         outputs, inference_time = run_ngraph_inference(model_path, random_inputs, device)
 
+    original_outputs = np.vstack([o.flatten().cpu().numpy() for o in original_outputs])
+    outputs = np.vstack(outputs)
+    #pdb.set_trace()
     ## TODO: tensorrt outputs to single point in memory and all, fix this later!
-    ##np.testing.assert_allclose(original_outputs, outputs, rtol=1e-03, atol=1e-05)
+    np.testing.assert_allclose(original_outputs, outputs, rtol=1e-03, atol=1e-05)
     if args.save:
         utils.save_results(model_root_path, method, model, str(inference_time), args.n, device)

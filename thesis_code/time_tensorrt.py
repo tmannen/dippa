@@ -19,7 +19,7 @@ def get_engine(onnx_file_path, engine_file_path, rebuild=False):
     def build_engine():
         """Takes an ONNX file and creates a TensorRT engine to run inference with"""
         with trt.Builder(TRT_LOGGER) as builder, builder.create_network(common.EXPLICIT_BATCH) as network, trt.OnnxParser(network, TRT_LOGGER) as parser:
-            builder.max_workspace_size = 1 << 31 # 2048MB?
+            builder.max_workspace_size = 1 << 30 # 2048MB?
             builder.max_batch_size = 1
             #builder.int8_mode = True
             # Parse model file
@@ -61,7 +61,6 @@ def run_tensorrt_inference(engine_file_path, random_inputs, onnx_file_path=None)
     trt_outputs = []
     n = len(random_inputs)
     name = engine_file_path.split("/")[-1]
-    #random_inputs = np.random.randn(n, 3, 224, 224).astype(np.float32)
     with get_engine(onnx_file_path, engine_file_path) as engine, engine.create_execution_context() as context:
         inputs, outputs, bindings, stream = common.allocate_buffers(engine)
         # Do inference

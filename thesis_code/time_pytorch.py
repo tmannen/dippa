@@ -8,7 +8,7 @@ import torch
 import numpy as np
 import argparse
 import utils
-#from torch2trt import torch2trt
+from torch2trt import torch2trt
 from torch import cuda
 from timeit import default_timer as timer
 
@@ -22,6 +22,7 @@ def run_pytorch_inference(pytorch_model_path, random_inputs, device='cuda'):
     outputs = []
     random_inputs = torch.from_numpy(np.expand_dims(random_inputs, 1)).to(device)
     sampledata = torch.ones((1, 3, 224, 224)).cuda()
+    #net = torch2trt(model, [sampledata])
     start = timer()
     with torch.no_grad():
         for i in range(n):

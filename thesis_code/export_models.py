@@ -108,7 +108,7 @@ def save_metadata(model, name, dir_path, input_size, onnx_opset):
 
 if __name__ == '__main__':
     args = argparse.ArgumentParser()
-    args.add_argument('-path', type=str, help='Directory where models are saved.')
+    args.add_argument('-path', type=str, default="/l/dippa_main/dippa/thesis_code/models/", help='Directory where models are saved.')
     args.add_argument('-model_name', type=str, help='Name of the model, e.g. "resnet50"')
     args.add_argument('-opset', type=int, default=9, help='Which ONNX opset version to use')
     parser = args.parse_args()

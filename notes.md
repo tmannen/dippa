@@ -264,6 +264,14 @@ Dippa notes (image in gmail):
 - TODO: relative performance? could be interesting with larger/smaller models
 - TODO: tensorrt quantization? in tensorrt-utils in /l/software theres classification/imagenet/onnx_to_tensorrt.py thing that has many options
 
+## 13.02.2020
+
+- TODO: kokeile yolo onnx-runtimellä ja onnx-simplifier? toimi onnx-simplifyn jälkeen whaat
+- ONNX-simplify didnt work - with opset version 9 there were nans in the simplified model. with onnx opset 11 tensorrt errors: add_constant not supported or found or something? also onnx opset 11 sometimes fails onnx-simplify testing? maybe because it fails only with some numbers and the simplifier tests random numbers?
+- TODO: use trt2onnx tool to use different optimizations?
+- OPENVINO notes: installed again the newest version, 1.2020. trying out dl workbench: https://docs.openvinotoolkit.org/latest/_docs_Workbench_DG_Install_from_Package.html
+- TODO: openvino toimii puhtaalla pythonilla? joten joku package aiheuttaa weird errors? poista vanha dippa env ja aloita puhdas dippa env.
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?

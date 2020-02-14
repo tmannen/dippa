@@ -14,7 +14,8 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 
- Teemu NOTE: need to run mo_onnx.py first. see notes.md
+ Teemu NOTE: need to run mo_onnx.py first. see notes.md'
+ NOTE: inference originally from /opt openvino samples python classification sample?
 """
 
 from __future__ import print_function
