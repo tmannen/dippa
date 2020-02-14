@@ -272,6 +272,14 @@ Dippa notes (image in gmail):
 - OPENVINO notes: installed again the newest version, 1.2020. trying out dl workbench: https://docs.openvinotoolkit.org/latest/_docs_Workbench_DG_Install_from_Package.html
 - TODO: openvino toimii puhtaalla pythonilla? joten joku package aiheuttaa weird errors? poista vanha dippa env ja aloita puhdas dippa env.
 
+## 14.02.2020
+
+- TODO: testaa käyttääkö pytorch mkl-dnn koska se vaikuttaa niin hitaalta?
+- TODO: katso tarkemmin mitä optimisaatioita jutut käyttää?
+- TODO: mainitse että resnet50 ja squeezenet on 'targets' ja sen takia ne sa enemmän optimisaatioita kuin muut tavallaan? esim intelin benchmarkit on tehety niillä jotkut.
+- intel uses different int8 things with detection and classification kinda interesting: https://docs.openvinotoolkit.org/2018_R5/_docs_IE_DG_Int8Inference.html
+- TODO: ehkä onnx simplifier voisi olla paremmin esillä? Myös onnx-runtime testit?
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?
