@@ -29,12 +29,12 @@ from timeit import default_timer as timer
 import argparse
 from openvino.inference_engine import IENetwork, IECore
 
-def run_openvino_inference(model_xml, inputs, device="cpu"):
+def run_openvino_inference(model_xml, inputs, device="CPU"):
     model_bin = os.path.splitext(model_xml)[0] + ".bin"
     log.info("Creating Inference Engine")
     ie = IECore()
     n = len(inputs)
-    #if args.cpu_extension and 'CPU' in args.device:
+    #if 'CPU' in device:
     #    ie.add_extension(args.cpu_extension, "CPU")
     # Read IR
     log.info("Loading network files:\n\t{}\n\t{}".format(model_xml, model_bin))

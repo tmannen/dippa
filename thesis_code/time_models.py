@@ -25,7 +25,8 @@ if __name__ == '__main__':
     parser.add_argument('-save', default=False, type=bool, help='Wheter to save the results to a CSV or not')
     parser.add_argument('-n', default=1000, type=int, help='How many inputs to run the model on.')
     parser.add_argument('-input_size', type=int, nargs='+', help='Input size (for ex. 3 224 224)', default=[3, 224, 224])
-
+    parser.add_argument('-simplified', type=bool, default=False, help='Use simplified ONNX (have to run onnxsim first on the ONNX file')
+    parser.add_argument('-validate', type=bool, default=False, help='Validate that the outputs are similar enough to original outputs after optimization')
     args = parser.parse_args()
     n = args.n
     method = args.method
@@ -33,30 +34,37 @@ if __name__ == '__main__':
     input_size = [n] + args.input_size
     random_inputs = np.random.randn(*input_size).astype(np.float32)
     model = args.model
+    model_file = model
+    if args.simplified:
+        model_file = model_file + "_simplified"
+
     # supply data size here? like with an if statement depending on model?
 
     ### take the outputs of the original pytorch model here to compare the outputs.
     ### NOTE assumes the original was made with pytorch.
-    original_model_path = os.path.join(model_root_path, model, model + ".pt")
-    original_outputs, _ = run_pytorch_inference(original_model_path, random_inputs)
     if method == "pytorch":
         model_path = os.path.join(model_root_path, model, model + ".pt")
         outputs, inference_time = run_pytorch_inference(model_path, random_inputs, device)
     elif method == "tensorrt":
-        model_path = os.path.join(model_root_path, model, model + ".trt")
-        outputs, inference_time = run_tensorrt_inference(model_path, random_inputs, os.path.join(model_root_path, model, model + "_simplified.onnx"))
+        # TODO?: change so tensorrt_inference doesnt need onnx just infer it from .trt path it should be same named?
+        model_path = os.path.join(model_root_path, model, model_file + ".trt")
+        outputs, inference_time = run_tensorrt_inference(model_path, random_inputs, os.path.join(model_root_path, model, model_file + ".onnx"))
     elif method == "openvino":
         from time_openvino import run_openvino_inference
-        model_path = os.path.join(model_root_path, model, model + ".xml")
+        model_path = os.path.join(model_root_path, model, model_file + ".xml")
         outputs, inference_time = run_openvino_inference(model_path, random_inputs)
     elif method == "ngraph":
-        model_path = os.path.join(model_root_path, model, model + ".onnx")
+        model_path = os.path.join(model_root_path, model, model_file + ".onnx")
         outputs, inference_time = run_ngraph_inference(model_path, random_inputs, device)
 
-    original_outputs = np.vstack([o.flatten().cpu().numpy() for o in original_outputs])
-    outputs = np.vstack(outputs)
     #pdb.set_trace()
     ## TODO: tensorrt outputs to single point in memory and all, fix this later!
-    np.testing.assert_allclose(original_outputs, outputs, rtol=1e-03, atol=1e-05)
+    if args.validate:
+        original_model_path = os.path.join(model_root_path, model, model + ".pt")
+        original_outputs, _ = run_pytorch_inference(original_model_path, random_inputs)
+        original_outputs = np.vstack([o.flatten().cpu().numpy() for o in original_outputs])
+        outputs = np.vstack(outputs)
+        np.testing.assert_allclose(original_outputs, outputs, rtol=1e-03, atol=1e-05)
+
     if args.save:
         utils.save_results(model_root_path, method, model, str(inference_time), args.n, device)

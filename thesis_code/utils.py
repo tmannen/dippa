@@ -5,8 +5,8 @@ import csv
 #import time_tensorrt
 import time_pytorch
 import torch
-import seaborn as sns
-import matplotlib as plt
+#import seaborn as sns
+#import matplotlib as plt
 
 def save_results(path, engine, model, time, n, device):
     # CSV with fields (engine, model, time, n)? appends to csv?

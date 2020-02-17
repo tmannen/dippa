@@ -8,7 +8,7 @@ import torch
 import numpy as np
 import argparse
 import utils
-from torch2trt import torch2trt
+#from torch2trt import torch2trt
 from torch import cuda
 from timeit import default_timer as timer
 

@@ -13,14 +13,15 @@ from timeit import default_timer as timer
 
 TRT_LOGGER = trt.Logger(trt.Logger.INFO)
 
-def get_engine(onnx_file_path, engine_file_path, rebuild=False):
+def get_engine(onnx_file_path, engine_file_path, input_size, rebuild=False):
     """Attempts to load a serialized engine if available, otherwise builds a new TensorRT engine and saves it."""
     print("Explicit batch: ", common.EXPLICIT_BATCH)
+    max_batch_size = 1
     def build_engine():
         """Takes an ONNX file and creates a TensorRT engine to run inference with"""
         with trt.Builder(TRT_LOGGER) as builder, builder.create_network(common.EXPLICIT_BATCH) as network, trt.OnnxParser(network, TRT_LOGGER) as parser:
             builder.max_workspace_size = 1 << 30 # 2048MB?
-            builder.max_batch_size = 1
+            builder.max_batch_size = max_batch_size
             #builder.int8_mode = True
             # Parse model file
             if not os.path.exists(onnx_file_path):
@@ -36,7 +37,7 @@ def get_engine(onnx_file_path, engine_file_path, rebuild=False):
                     return None
             # The actual yolov3.onnx is generated with batch size 64. Reshape input to batch size 1
             print("jee")
-            network.get_input(0).shape = [1, 3, 224, 224]
+            network.get_input(0).shape = [max_batch_size] + input_size
             print('Completed parsing of ONNX file')
             print('Building an engine from file {}; this may take a while...'.format(onnx_file_path))
             engine = builder.build_cuda_engine(network)
@@ -61,7 +62,7 @@ def run_tensorrt_inference(engine_file_path, random_inputs, onnx_file_path=None)
     trt_outputs = []
     n = len(random_inputs)
     name = engine_file_path.split("/")[-1]
-    with get_engine(onnx_file_path, engine_file_path) as engine, engine.create_execution_context() as context:
+    with get_engine(onnx_file_path, engine_file_path, list(random_inputs.shape[1:])) as engine, engine.create_execution_context() as context:
         inputs, outputs, bindings, stream = common.allocate_buffers(engine)
         # Do inference
         print('Running inference on {} random images'.format(n))

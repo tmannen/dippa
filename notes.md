@@ -280,6 +280,14 @@ Dippa notes (image in gmail):
 - intel uses different int8 things with detection and classification kinda interesting: https://docs.openvinotoolkit.org/2018_R5/_docs_IE_DG_Int8Inference.html
 - TODO: ehkä onnx simplifier voisi olla paremmin esillä? Myös onnx-runtime testit?
 
+## 17.02.2020
+
+- TODO: openvino with GPU?
+- NOTE: installed OPENVINO against the 2019 version because all kinds of weirdness with 2020. probably related to ngraph? since new one comes with ngraph?
+- NOTE: openvino is 10 times slower on a new python conda environment?? maybe something with mkl packages? how did i install them?
+- TODO: onnx runtime testing?
+- TODO: TVM could be interesting, if it doesnt require much effort? could see fast depth repo for examples?
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?
