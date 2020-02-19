@@ -317,6 +317,11 @@ Dippa notes (image in gmail):
 - pieni add voisi olla että paljon konverttaukseen menee aikaa
 - pytorch mobile olemassa, voisi mainita
 
+## 19.02.2020
+
+- swappaa squeezenet mobilenettiin koska se on predefined TFssä? myös kait parempi tms.
+- TOOD: ehkä parempi niin että loadaa modelien definitions ja sitten load weights, eikä että savee koko mallin? vaikuttaa olevan pieniä warningeja pytorch ja tf molemmissa
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?

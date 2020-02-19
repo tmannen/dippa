@@ -6,10 +6,12 @@ from other places (like run_tensorrt_inference) and just control what tool to us
 import argparse
 import numpy as np
 import os
-import utils
-from time_tensorrt import run_tensorrt_inference
-from time_pytorch import run_pytorch_inference
-from time_ngraph import run_ngraph_inference
+#import utils
+#from time_tensorrt import run_tensorrt_inference
+#from time_pytorch import run_pytorch_inference
+#from time_ngraph import run_ngraph_inference
+from time_tensorflow import run_tensorflow_inference
+import tensorflow_models
 import pdb
 ## This is for the YOLO model:
 import sys
@@ -45,6 +47,12 @@ if __name__ == '__main__':
     if method == "pytorch":
         model_path = os.path.join(model_root_path, model, model + ".pt")
         outputs, inference_time = run_pytorch_inference(model_path, random_inputs, device)
+    elif method == "tensorflow":
+        # TODO: make this change from code. also, would it in general be better to load model from code instead of file? small warnings when saving whole model with pt and tf
+        model = tensorflow_models.get_resnet50()
+        #model_path = os.path.join(model_root_path, model, model + ".pt")
+        random_inputs = np.swapaxes(random_inputs, 1, 3)
+        outputs, inference_time = run_tensorflow_inference(model, random_inputs, device)
     elif method == "tensorrt":
         # TODO?: change so tensorrt_inference doesnt need onnx just infer it from .trt path it should be same named?
         model_path = os.path.join(model_root_path, model, model_file + ".trt")
