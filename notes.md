@@ -283,10 +283,39 @@ Dippa notes (image in gmail):
 ## 17.02.2020
 
 - TODO: openvino with GPU?
-- NOTE: installed OPENVINO against the 2019 version because all kinds of weirdness with 2020. probably related to ngraph? since new one comes with ngraph?
 - NOTE: openvino is 10 times slower on a new python conda environment?? maybe something with mkl packages? how did i install them?
 - TODO: onnx runtime testing?
 - TODO: TVM could be interesting, if it doesnt require much effort? could see fast depth repo for examples?
+
+## 18.02.2020
+
+- MEETING NOTES:
+- konkreettisuus ok työssä, että miten se inference oikeasti tehdään
+- enemmän jäsennystä? sectionien järjestys työssä?
+- vertaile malleja keskenään että mitä uutta mallit tuo, tämä oli aiemminkin mietteenä. enemmän yksityiskohtia.
+- Method on sitä että mitä ne toolit yleisesti tekee? Experiments on se mitä itse tuon siihen työhön?
+- Tärkeä tietää mitä ne toolit tekee sisällä.
+- experiments osio se tärkeä ensin, eli miksi tekee ja miten. speksit myöhemmin
+- enemmän tarkastelukulmia, tyyliin mitä testää ja miksi
+- sivun 12 kuva vähä meh. kuva tools sectioon? tai ehkä vaan poistaa kun vähän outo. joku toinen kuva joka kertoo mun experiments.
+- e.g. pilkut, italisoi koska latinaa? it's -> it is? 
+- tärkeitten asioitten toistaminen ok! esim accuracy test ihan experiment setup alussa ja sitten ihan experimenteissä? paperin pääpointti ok toistaa monessakin paikassa.
+- kerro ruksi ja checkmark mitä meinaa
+- TODO: enemmän GPU testejä: tensorflow, tflite, ehkä tvm?
+- testaa myös pytorch optimizations kuten quantization?
+- alleviivaa kuinka helppo pytorch jne. on installoida. tärkeää tämä käyttö
+- maybe dont try to fix yolo but just mention it?
+- TENSORFLOW JA TFLITE TÄRKEÄT
+- kirjallisuusviitteet backgroundissa ja metodiikassa: perusviitteet. background tekniset viitteet. discussion erityiset viitteet
+- miten minun mittaukset vertautuu muihin saman tapaisiin papereihin?
+- experiments osion yolo jne. havainnot resultseihin? ja muutkin saman kaltaiset resultseihin?
+- discussions osiokin?
+- joitain juttuja voisi siirtää experiments setuppiin, esim modelit, setup, metric, build, runs, workload.
+- experiment setupin voisi mahdollisesti split design ja implementation/setup
+- sisällysluetteloa vois alkaa tekemään
+- mixed precision puuttuu selitys?
+- pieni add voisi olla että paljon konverttaukseen menee aikaa
+- pytorch mobile olemassa, voisi mainita
 
 # Misc Notes
 
