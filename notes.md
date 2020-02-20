@@ -322,6 +322,13 @@ Dippa notes (image in gmail):
 - swappaa squeezenet mobilenettiin koska se on predefined TFssä? myös kait parempi tms.
 - TOOD: ehkä parempi niin että loadaa modelien definitions ja sitten load weights, eikä että savee koko mallin? vaikuttaa olevan pieniä warningeja pytorch ja tf molemmissa
 
+## 20.02.2020
+
+- Jos importtaa from time_ngraph import run_ngraph_inference ennen from time_tensorflow import run_tensorflow_inference niin tulee seg fault? myös error joskus? johtuu kait jotenkin SSLstä?
+- mainitse että openvino ngraph tensorrt on niitä malleja myös predefined? eli jos normi käyttöä niin niitä voi käyttää
+- tensorflow default predict oli slow - piti käyttää predict_on_batch. joku memory error kerasissa/tfssa? https://github.com/tensorflow/tensorflow/issues/34579
+- TODO: lataa tensorrt 6 ja testaa tensorflowin kanssa?
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?

@@ -6,12 +6,9 @@ from other places (like run_tensorrt_inference) and just control what tool to us
 import argparse
 import numpy as np
 import os
-#import utils
+import utils
 #from time_tensorrt import run_tensorrt_inference
 #from time_pytorch import run_pytorch_inference
-#from time_ngraph import run_ngraph_inference
-from time_tensorflow import run_tensorflow_inference
-import tensorflow_models
 import pdb
 ## This is for the YOLO model:
 import sys
@@ -22,9 +19,9 @@ model_root_path = "/l/dippa_main/dippa/thesis_code/models/"
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-model', type=str, default=None, help='Model name, for example "resnet50".')
-    parser.add_argument('-method', type=str, help='pytorch, tensorrt, ngraph or openvino')
-    parser.add_argument('-device', type=str, default="gpu", help='cpu or gpu')
-    parser.add_argument('-save', default=False, type=bool, help='Wheter to save the results to a CSV or not')
+    parser.add_argument('-method', type=str, help='pytorch, tensorrt, ngraph, tensorflow or openvino')
+    parser.add_argument('-device', type=str, default="gpu", help='Device to run the model on, usually cpu or gpu')
+    parser.add_argument('-save', default=False, type=bool, help='Whether to save the results to a CSV or not')
     parser.add_argument('-n', default=1000, type=int, help='How many inputs to run the model on.')
     parser.add_argument('-input_size', type=int, nargs='+', help='Input size (for ex. 3 224 224)', default=[3, 224, 224])
     parser.add_argument('-simplified', type=bool, default=False, help='Use simplified ONNX (have to run onnxsim first on the ONNX file')
@@ -35,8 +32,7 @@ if __name__ == '__main__':
     device = args.device
     input_size = [n] + args.input_size
     random_inputs = np.random.randn(*input_size).astype(np.float32)
-    model = args.model
-    model_file = model
+    model_file = args.model
     if args.simplified:
         model_file = model_file + "_simplified"
 
@@ -45,13 +41,16 @@ if __name__ == '__main__':
     ### take the outputs of the original pytorch model here to compare the outputs.
     ### NOTE assumes the original was made with pytorch.
     if method == "pytorch":
-        model_path = os.path.join(model_root_path, model, model + ".pt")
-        outputs, inference_time = run_pytorch_inference(model_path, random_inputs, device)
+        from time_pytorch import run_pytorch_inference
+        model = utils.get_pytorch_model(args.model)
+        outputs, inference_time = run_pytorch_inference(model, random_inputs, device)
     elif method == "tensorflow":
+        from time_tensorflow import run_tensorflow_inference
         # TODO: make this change from code. also, would it in general be better to load model from code instead of file? small warnings when saving whole model with pt and tf
-        model = tensorflow_models.get_resnet50()
-        #model_path = os.path.join(model_root_path, model, model + ".pt")
+        model = utils.get_tensorflow_model(args.model)
+        #Tensorflow uses (batch_size, H, W, C), pytorch (batch_size, C, H, W)
         random_inputs = np.swapaxes(random_inputs, 1, 3)
+        random_inputs = np.swapaxes(random_inputs, 1, 2).astype(np.float32)
         outputs, inference_time = run_tensorflow_inference(model, random_inputs, device)
     elif method == "tensorrt":
         # TODO?: change so tensorrt_inference doesnt need onnx just infer it from .trt path it should be same named?
@@ -62,6 +61,7 @@ if __name__ == '__main__':
         model_path = os.path.join(model_root_path, model, model_file + ".xml")
         outputs, inference_time = run_openvino_inference(model_path, random_inputs)
     elif method == "ngraph":
+        from time_ngraph import run_ngraph_inference
         model_path = os.path.join(model_root_path, model, model_file + ".onnx")
         outputs, inference_time = run_ngraph_inference(model_path, random_inputs, device)
 

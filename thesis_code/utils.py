@@ -2,11 +2,9 @@ import pandas as pd
 import numpy as np
 import os
 import csv
-#import time_tensorrt
-import time_pytorch
 import torch
-#import seaborn as sns
-#import matplotlib as plt
+import seaborn as sns
+import matplotlib as plt
 
 def save_results(path, engine, model, time, n, device):
     # CSV with fields (engine, model, time, n)? appends to csv?
@@ -23,25 +21,47 @@ def graph_results(results_path):
     datas['method'] = datas['method'] + " (" + datas['device'] + ")"
     sns.set(style="whitegrid")
     g = sns.catplot(x="model", y="time", hue="method", data=datas, kind="bar")
-    g.set_ylabels("Average time per single inference(milliseconds)")
+    g.set_ylabels("Average time per single inference (milliseconds)")
     plt.show()
 
+def get_pytorch_model(name):
+    import torchvision
+    import sys
+    sys.path.append('model_definitions/')
+    from model_definitions import yolo, fully_connected, lstm
+    if name == "resnet50":
+        return torchvision.models.resnet50(pretrained=True)
+    elif name == "mobilenet":
+        return torchvision.models.mobilenet_v2(pretrained=True)
+    elif name == "squeezenet":
+        torchvision.models.squeezenet1_0(pretrained=True)
+    elif name == "fully_connected":
+        return fully_connected.FullyConnected()
+    elif name == "yolo":
+        model = yolo.Darknet("model_definitions/config/yolov3.cfg")
+        model.load_darknet_weights("model_definitions/weights/yolov3.weights")
+        return model
+    elif name == "lstm":
+        # TODO: make this simpler. right now uses code in export_models in there and blaa
+        pass
 
-def compare_accuracy_pt_trt(pt_model_path, trt_model_path, input_size, n=1000, onnx_model_path=None):
-    # Needs the two models and what they're using (pytorch, tensorrt)? cool way would be to wrap in a predict() function and just call that
-    # but maybe overkill. different function for each backend? pytorch vs tensorrt, pt vs openvino, etc.
-    input_size = [n] + input_size
-    random_inputs = np.random.randn(*input_size).astype(np.float32)
-    pytorch_outputs = time_pytorch.run_pytorch_inference(pt_model_path, random_inputs)
-    pytorch_outputs = torch.stack(pytorch_outputs).squeeze().cpu().numpy()
-    # TRT outputs are the same if n > 1? probably because some memory copy shenanigans in tensorrt. see notes.md 24.01.2020
-    trt_outputs = time_tensorrt.run_tensorrt_inference(trt_model_path, random_inputs)
-    trt_outputs = np.vstack(trt_outputs).squeeze()
-    np.testing.assert_allclose(pytorch_outputs, trt_outputs, rtol=1e-03, atol=1e-05)
-
-def compare_accuracy(original_outputs, tool_outputs):
-    np.testing.assert_allclose(original_outputs, tool_outputs, rtol=1e-03, atol=1e-05)
-
-#compare_accuracy_pt_trt("/l/dippa_main/dippa/thesis_code/models/resnet50/resnet50.pt", 
-#                        "/l/dippa_main/dippa/thesis_code/models/resnet50/resnet50.trt", 
-#                        [3, 224, 224], 2)
+def get_tensorflow_model(name):
+    import tensorflow as tf
+    import sys
+    sys.path.append('model_definitions/')
+    from model_definitions.yolo_tf.models import YoloV3, YoloV3Tiny
+    from model_definitions.yolo_tf.utils import load_darknet_weights
+    if name == "resnet50":
+        return tf.keras.applications.ResNet50()
+    elif name == "mobilenet":
+        return tf.keras.applications.MobileNetV2()
+    elif name == "fully_connected":
+        return tensorflow_models.get_fully_connected()
+    elif name == "yolo":
+        # 80 seems to be the default, let's just go with that
+        yolo = YoloV3(classes=80)
+        load_darknet_weights(yolo, "weights/yolov2.weights", False)
+        return yolo
+    elif name == "lstm":
+        # TODO: tf lstm
+        pass

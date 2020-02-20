@@ -14,32 +14,11 @@ import torch.nn.functional as F
 import torch.optim as optim
 import os
 import argparse
+from utils import get_pytorch_model, get_tensorflow_model
 # wonky sys thing required because yolo uses files in its own dir so this way the import works there
 import sys
 sys.path.append('model_definitions/')
 from model_definitions import yolo, fully_connected, lstm
-
-def export_fasterRCNN(dir_path):
-    """
-    export not working in pytorch 1.3? complains about FrozenBatchNorm
-
-    uses resnet as backbone
-    """
-    name = "fasterrcnn"
-    full_path = os.path.join(dir_path, name)
-    onnx_model_path = os.path.join(full_path, name + ".onnx")
-    torch_model_path = os.path.join(full_path, name + ".pt")
-    os.makedirs(full_path, exist_ok=True)
-    model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
-    model.eval()
-    input_size = [1, 3, 224, 224]
-    x = torch.randn(input_size, requires_grad=True)
-    out = model(x)
-    # What about opset versions?
-    torch.save(model, torch_model_path)
-    torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=11)
-    save_metadata(model, name, full_path, input_size)
-
 
 def export_model(model, dir_path, name, opset_version, input_size):
     full_path = os.path.join(dir_path, name)
