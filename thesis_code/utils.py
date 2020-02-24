@@ -6,6 +6,20 @@ import torch
 import seaborn as sns
 import matplotlib as plt
 
+from absl import app, flags, logging
+from absl.flags import FLAGS
+
+
+flags.DEFINE_string('classes', './data/coco.names', 'path to classes file')
+flags.DEFINE_string('weights', './checkpoints/yolov3.tf',
+                    'path to weights file')
+flags.DEFINE_boolean('tiny', False, 'yolov3 or yolov3-tiny')
+flags.DEFINE_integer('size', 416, 'resize images to')
+flags.DEFINE_string('image', './data/girl.png', 'path to input image')
+flags.DEFINE_string('tfrecord', None, 'tfrecord instead of image')
+flags.DEFINE_string('output', './output.jpg', 'path to output image')
+flags.DEFINE_integer('num_classes', 80, 'number of classes in the model')
+
 def save_results(path, engine, model, time, n, device):
     # CSV with fields (engine, model, time, n)? appends to csv?
     save_path = os.path.join(path, "results.csv")
@@ -49,10 +63,11 @@ def get_tensorflow_model(name):
     import tensorflow as tf
     import sys
     sys.path.append('model_definitions/')
+    from model_definitions import tensorflow_models
     from model_definitions.yolo_tf.models import YoloV3, YoloV3Tiny
     from model_definitions.yolo_tf.utils import load_darknet_weights
     if name == "resnet50":
-        return tf.keras.applications.ResNet50()
+        return tf.keras.applications.ResNet50
     elif name == "mobilenet":
         return tf.keras.applications.MobileNetV2()
     elif name == "fully_connected":
@@ -60,7 +75,7 @@ def get_tensorflow_model(name):
     elif name == "yolo":
         # 80 seems to be the default, let's just go with that
         yolo = YoloV3(classes=80)
-        load_darknet_weights(yolo, "weights/yolov2.weights", False)
+        load_darknet_weights(yolo, "weights/yolov3.weights", False)
         return yolo
     elif name == "lstm":
         # TODO: tf lstm

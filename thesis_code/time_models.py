@@ -46,11 +46,13 @@ if __name__ == '__main__':
         outputs, inference_time = run_pytorch_inference(model, random_inputs, device)
     elif method == "tensorflow":
         from time_tensorflow import run_tensorflow_inference
+        from model_definitions.yolo_tf.models import (YoloV3, YoloV3Tiny)
         # TODO: make this change from code. also, would it in general be better to load model from code instead of file? small warnings when saving whole model with pt and tf
         model = utils.get_tensorflow_model(args.model)
-        #Tensorflow uses (batch_size, H, W, C), pytorch (batch_size, C, H, W)
-        random_inputs = np.swapaxes(random_inputs, 1, 3)
-        random_inputs = np.swapaxes(random_inputs, 1, 2).astype(np.float32)
+        #Tensorflow uses (batch_size, H, W, C), pytorch (batch_size, C, H, W). for images
+        if args.model in ["resnet50", "yolo", "squeezenet", "mobilenet"]:
+            random_inputs = np.swapaxes(random_inputs, 1, 3)
+            random_inputs = np.swapaxes(random_inputs, 1, 2).astype(np.float32)
         outputs, inference_time = run_tensorflow_inference(model, random_inputs, device)
     elif method == "tensorrt":
         # TODO?: change so tensorrt_inference doesnt need onnx just infer it from .trt path it should be same named?

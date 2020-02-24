@@ -320,7 +320,7 @@ Dippa notes (image in gmail):
 ## 19.02.2020
 
 - swappaa squeezenet mobilenettiin koska se on predefined TFssä? myös kait parempi tms.
-- TOOD: ehkä parempi niin että loadaa modelien definitions ja sitten load weights, eikä että savee koko mallin? vaikuttaa olevan pieniä warningeja pytorch ja tf molemmissa
+- TODO: ehkä parempi niin että loadaa modelien definitions ja sitten load weights, eikä että savee koko mallin? vaikuttaa olevan pieniä warningeja pytorch ja tf molemmissa
 
 ## 20.02.2020
 
@@ -328,6 +328,24 @@ Dippa notes (image in gmail):
 - mainitse että openvino ngraph tensorrt on niitä malleja myös predefined? eli jos normi käyttöä niin niitä voi käyttää
 - tensorflow default predict oli slow - piti käyttää predict_on_batch. joku memory error kerasissa/tfssa? https://github.com/tensorflow/tensorflow/issues/34579
 - TODO: lataa tensorrt 6 ja testaa tensorflowin kanssa?
+- laita yolo toimimaan tensorflowissa, jotain flags juttuja
+
+## 24.02.2020
+
+- XLA for tensorflow?
+- mention NNEF? competing open format. much fewer references though, has it been dropped?
+- mention autoML and shit?
+- tflite performance: https://www.tensorflow.org/lite/performance/best_practices
+- testing inference: https://www.eembc.org/techlit/articles/MLMARK-WHITEPAPER-FINAL-1.pdf seems legit? (use the image from that paper that shows only inference time is calculated?)
+- use SSD instead of yolo?
+- TODO: check if optimizations are made for loop for example? could do HARDCORE profiling of at least one run
+- Pytorch mixed precision: apex from nvidia? https://pytorch.org/hub/nvidia_deeplearningexamples_ssd/ also SSD for pytorch?
+- SSD for tensorflow?: https://github.com/tensorflow/models/tree/master/research/object_detection
+- try other resnet too? https://tfhub.dev/google/imagenet/resnet_v2_50/classification/4
+- onnx to tensorflow: https://github.com/onnx/onnx-tensorflow
+- pytorch onnx to tensorflow: https://towardsdatascience.com/converting-a-simple-deep-learning-model-from-pytorch-to-tensorflow-b6b353351f5d
+- ^ blah shit, esim imagen eri formaatti estää? onnx input on input.1:0 ja output 495:0
+- OMFGGG tensorflow-gpu 1.15 tarttee cuda 10.0 eikä pysty käyttää gpu ilman sitä. ota vaan uusin tf?
 
 # Misc Notes
 
