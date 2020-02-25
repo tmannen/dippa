@@ -347,6 +347,10 @@ Dippa notes (image in gmail):
 - ^ blah shit, esim imagen eri formaatti estää? onnx input on input.1:0 ja output 495:0
 - OMFGGG tensorflow-gpu 1.15 tarttee cuda 10.0 eikä pysty käyttää gpu ilman sitä. ota vaan uusin tf?
 
+## 25.02.2020
+
+- Mainitse vaikeuksista ottaa object detection modelia: yolo ei oikein pystynyt convert onnxllä, faster-rcnn valitti jotain freeze layereistä jne.
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?
