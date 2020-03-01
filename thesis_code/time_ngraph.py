@@ -9,6 +9,7 @@ def run_ngraph_inference(model_onnx, inputs, device):
     ng_function = import_onnx_model(onnx_protobuf)
     runtime = ng.runtime(backend_name=device)
     model = runtime.computation(ng_function)
+    # TODO: doesnt work with fully connected, fix
     inputs = np.expand_dims(inputs, 1) # add a dimension so slicing in the loop returns a properly shaped input for ngraph. pytorch too
     n = len(inputs)
     outputs = []

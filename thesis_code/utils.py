@@ -48,7 +48,7 @@ def get_pytorch_model(name):
     elif name == "mobilenet":
         return torchvision.models.mobilenet_v2(pretrained=True)
     elif name == "squeezenet":
-        torchvision.models.squeezenet1_0(pretrained=True)
+        return torchvision.models.squeezenet1_0(pretrained=True)
     elif name == "fully_connected":
         return fully_connected.FullyConnected()
     elif name == "yolo":
