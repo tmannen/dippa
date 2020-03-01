@@ -330,6 +330,7 @@ Dippa notes (image in gmail):
 - TODO: lataa tensorrt 6 ja testaa tensorflowin kanssa?
 - laita yolo toimimaan tensorflowissa, jotain flags juttuja
 
+
 ## 24.02.2020
 
 - XLA for tensorflow?
@@ -350,6 +351,20 @@ Dippa notes (image in gmail):
 ## 25.02.2020
 
 - Mainitse vaikeuksista ottaa object detection modelia: yolo ei oikein pystynyt convert onnxllä, faster-rcnn valitti jotain freeze layereistä jne.
+
+## 26.02.2020
+
+- Teoriassa jos on identtinen verkko niin voi siirtää weights tensorflowista pytorchiin jne.
+- mention conda environments easier to install cuda n shit https://towardsdatascience.com/tensorflow-gpu-installation-made-easy-use-conda-instead-of-pip-52e5249374bc
+- TODO kokeile tensorflow to onnx to tensorrt? TODO how tha fuck ku se tf2onnx valittaa jostain signatureista pitää kait ite define ne tms?
+- openvino shittiä? https://docs.openvinotoolkit.org/latest/_docs_MO_DG_prepare_model_convert_model_tf_specific_Convert_YOLO_From_Tensorflow.html suoraan tensorflowista
+- maybe write pipelines for: tf 2 tensorrt, tf 2 openvino, tf 2 ngraph, pt to noihin oikestaan jo tehty onnxllä. sitten tf to onnx ja samat?
+- TODO: kokeile ehkä 224 224 inputilla yoloa? koska nyt se on kait none tf yolossa?
+- TODO WRITING: "oddly enough tf interoperability was easier because more complex models were actually supported with more closer tf interop with the tools" jos toimii yolokin?
+
+## 28.02.2020
+
+- TODO: mobilenet kaikilla malleilla, squeezenet myös tfllä?
 
 # Misc Notes
 

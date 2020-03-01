@@ -67,7 +67,7 @@ def get_tensorflow_model(name):
     from model_definitions.yolo_tf.models import YoloV3, YoloV3Tiny
     from model_definitions.yolo_tf.utils import load_darknet_weights
     if name == "resnet50":
-        return tf.keras.applications.ResNet50
+        return tf.keras.applications.ResNet50()
     elif name == "mobilenet":
         return tf.keras.applications.MobileNetV2()
     elif name == "fully_connected":

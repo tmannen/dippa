@@ -55,26 +55,27 @@ if __name__ == '__main__':
             random_inputs = np.swapaxes(random_inputs, 1, 2).astype(np.float32)
         outputs, inference_time = run_tensorflow_inference(model, random_inputs, device)
     elif method == "tensorrt":
+        from time_tensorrt import run_tensorrt_inference
         # TODO?: change so tensorrt_inference doesnt need onnx just infer it from .trt path it should be same named?
-        model_path = os.path.join(model_root_path, model, model_file + ".trt")
-        outputs, inference_time = run_tensorrt_inference(model_path, random_inputs, os.path.join(model_root_path, model, model_file + ".onnx"))
+        model_path = os.path.join(model_root_path, model_file, model_file + ".trt")
+        outputs, inference_time = run_tensorrt_inference(model_path, random_inputs, os.path.join(model_root_path, model_file, model_file + ".onnx"))
     elif method == "openvino":
         from time_openvino import run_openvino_inference
-        model_path = os.path.join(model_root_path, model, model_file + ".xml")
+        model_path = os.path.join(model_root_path, model_file, model_file + ".xml")
         outputs, inference_time = run_openvino_inference(model_path, random_inputs)
     elif method == "ngraph":
         from time_ngraph import run_ngraph_inference
-        model_path = os.path.join(model_root_path, model, model_file + ".onnx")
+        model_path = os.path.join(model_root_path, model_file, model_file + ".onnx")
         outputs, inference_time = run_ngraph_inference(model_path, random_inputs, device)
 
     #pdb.set_trace()
     ## TODO: tensorrt outputs to single point in memory and all, fix this later!
     if args.validate:
-        original_model_path = os.path.join(model_root_path, model, model + ".pt")
+        original_model_path = os.path.join(model_root_path, model_file, model_file + ".pt")
         original_outputs, _ = run_pytorch_inference(original_model_path, random_inputs)
         original_outputs = np.vstack([o.flatten().cpu().numpy() for o in original_outputs])
         outputs = np.vstack(outputs)
         np.testing.assert_allclose(original_outputs, outputs, rtol=1e-03, atol=1e-05)
 
     if args.save:
-        utils.save_results(model_root_path, method, model, str(inference_time), args.n, device)
+        utils.save_results(model_root_path, method, args.model, str(inference_time), args.n, device)
