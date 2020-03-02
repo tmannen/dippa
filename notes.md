@@ -366,6 +366,14 @@ Dippa notes (image in gmail):
 
 - TODO: mobilenet kaikilla malleilla, squeezenet myös tfllä?
 
+## 02.03.2020
+
+- main q to answer: can I get an improvement using conversion tools?
+- ottaisko tensorflowin original sourcena ja sitten kokeilisi conversiota siitä myös ja katsoo tuliko improvements.
+- kaksi osiota: Pytorch ja tensorflow
+- tee warmup jokaisella toolilla
+- append vie paljon aikaa joten käytä predefined numpy array
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?
