@@ -48,9 +48,11 @@ def get_pytorch_model(name):
     elif name == "mobilenet":
         return torchvision.models.mobilenet_v2(pretrained=True)
     elif name == "squeezenet":
-        torchvision.models.squeezenet1_0(pretrained=True)
+        return torchvision.models.squeezenet1_0(pretrained=True)
     elif name == "fully_connected":
         return fully_connected.FullyConnected()
+    elif name == "vgg16":
+        return torchvision.models.vgg16(pretrained=True)
     elif name == "yolo":
         model = yolo.Darknet("model_definitions/config/yolov3.cfg")
         model.load_darknet_weights("model_definitions/weights/yolov3.weights")
@@ -72,6 +74,8 @@ def get_tensorflow_model(name):
         return tf.keras.applications.MobileNetV2()
     elif name == "fully_connected":
         return tensorflow_models.get_fully_connected()
+    elif name == "vgg16":
+        return tf.keras.applications.VGG16()
     elif name == "yolo":
         # 80 seems to be the default, let's just go with that
         yolo = YoloV3(classes=80)

@@ -366,6 +366,7 @@ Dippa notes (image in gmail):
 
 - TODO: mobilenet kaikilla malleilla, squeezenet myös tfllä?
 
+<<<<<<< HEAD
 ## 01.03.2020
 
 - torch model hub zoo? official? https://pytorch.org/docs/stable/model_zoo.html#module-torch.utils.model_zoo
@@ -378,6 +379,18 @@ Dippa notes (image in gmail):
 - TODO WRITING: dynamic vs static computation graphs?
 - TODO WRITING: conv nets more about them, image of them too? look at matias paper thing?
 - TODO WRITING: link to other results, find more papers and see how they do it etc.
+=======
+## 02.03.2020
+
+- main q to answer: can I get an improvement using conversion tools?
+- ottaisko tensorflowin original sourcena ja sitten kokeilisi conversiota siitä myös ja katsoo tuliko improvements.
+- kaksi osiota: Pytorch ja tensorflow?
+- tee warmup jokaisella toolilla
+- append vie paljon aikaa joten käytä predefined numpy array (note: ei pitäisi viedä)
+- TODO: add vgg-19, very large network with over 100 million parameters (shows gpu better for large ones?)
+- TODO: get flops as well in addition to nr of params? apparently flops might be better, but how to calculate?
+- https://github.com/onnx/onnx-tensorflow
+>>>>>>> c054bb29619220f61cd0640bc56621b8d48dc3d9
 
 # Misc Notes
 

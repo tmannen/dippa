@@ -108,6 +108,9 @@ if __name__ == '__main__':
         input_size = [1, 3, 224, 224]
     elif model_name == "fully_connected":
         model = fully_connected.FullyConnected()
-        input_size = 784
+        input_size = [784]
+    elif model_name == "mobilenet":
+        model = torchvision.models.mobilenet_v2()
+        input_size = [1, 3, 224, 224]
         
     export_model(model, parser.path, parser.model_name, parser.opset, input_size)
