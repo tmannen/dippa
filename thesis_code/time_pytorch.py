@@ -19,16 +19,17 @@ def run_pytorch_inference(model, random_inputs, device='cuda'):
     n = len(random_inputs)
     outputs = []
     random_inputs = torch.from_numpy(np.expand_dims(random_inputs, 1)).to(device)
-    sampledata = torch.ones((1, 3, 224, 224)).cuda()
+    #sampledata = torch.ones((1, 3, 224, 224)).cuda()
     #net = torch2trt(model, [sampledata])
+    outputs = torch.zeros((n, 1000)) # note: append is apparently fast in python 3 at least so may not need this?
     start = timer()
     with torch.no_grad():
         for i in range(n):
-            outputs.append(net(random_inputs[i]))
+            outputs[i] = net(random_inputs[i])
     
     inference_time = (timer() - start)*1000 / n
     print(f'inference time (msec): {inference_time:.5f}')
-    return outputs, inference_time
+    return outputs.numpy(), inference_time
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
