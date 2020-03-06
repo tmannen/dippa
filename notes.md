@@ -366,6 +366,19 @@ Dippa notes (image in gmail):
 
 - TODO: mobilenet kaikilla malleilla, squeezenet myös tfllä?
 
+## 01.03.2020
+
+- torch model hub zoo? official? https://pytorch.org/docs/stable/model_zoo.html#module-torch.utils.model_zoo
+- TODO: fully connected ei toimi nyt openvinossa, joku shape juttu?
+- TODO: ngraph gpu?
+
+## 06.03.2020
+
+- ONNX RUNTIME FOR REAL: https://venturebeat.com/2020/01/21/microsoft-open-sources-onnx-runtime-model-to-speed-up-googles-bert/
+- TODO WRITING: dynamic vs static computation graphs?
+- TODO WRITING: conv nets more about them, image of them too? look at matias paper thing?
+- TODO WRITING: link to other results, find more papers and see how they do it etc.
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?
