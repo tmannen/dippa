@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import os
 import csv
-import torch
 import seaborn as sns
 import matplotlib as plt
 
@@ -41,25 +40,37 @@ def graph_results(results_path):
 def get_pytorch_model(name):
     import torchvision
     import sys
+    import torch
     sys.path.append('model_definitions/')
     from model_definitions import yolo, fully_connected, lstm
     if name == "resnet50":
-        return torchvision.models.resnet50(pretrained=True)
+        input_size = [1, 3, 224, 224]
+        model = torchvision.models.resnet50(pretrained=True)
     elif name == "mobilenet":
-        return torchvision.models.mobilenet_v2(pretrained=True)
+        input_size = [1, 3, 224, 224]
+        model = torchvision.models.mobilenet_v2(pretrained=True)
     elif name == "squeezenet":
-        return torchvision.models.squeezenet1_0(pretrained=True)
+        input_size = [1, 3, 224, 224]
+        model = torchvision.models.squeezenet1_0(pretrained=True)
     elif name == "fully_connected":
-        return fully_connected.FullyConnected()
+        input_size = [784]
+        model = fully_connected.FullyConnected()
     elif name == "vgg16":
-        return torchvision.models.vgg16(pretrained=True)
+        input_size = [1, 3, 224, 224]
+        model = torchvision.models.vgg16(pretrained=True)
     elif name == "yolo":
+        input_size = [1, 3, 224, 224]
         model = yolo.Darknet("model_definitions/config/yolov3.cfg")
         model.load_darknet_weights("model_definitions/weights/yolov3.weights")
-        return model
+    elif name == "ssd":
+        input_size = [1, 3, 300, 300]
+        precision = 'fp32' # Maybe try other precisions? prolly not needed though?
+        model = torch.hub.load('NVIDIA/DeepLearningExamples:torchhub', 'nvidia_ssd', model_math=precision)
     elif name == "lstm":
         # TODO: make this simpler. right now uses code in export_models in there and blaa
         pass
+
+    return model, input_size
 
 def get_tensorflow_model(name):
     import tensorflow as tf
@@ -84,3 +95,25 @@ def get_tensorflow_model(name):
     elif name == "lstm":
         # TODO: tf lstm
         pass
+
+def get_tensorflow1_graph_from_onnx(name, strict=False):
+    import tensorflow as tf
+    import onnx
+    from onnx_tf.backend import prepare
+
+    # From: https://towardsdatascience.com/converting-a-simple-deep-learning-model-from-pytorch-to-tensorflow-b6b353351f5d
+    def load_pb(path_to_pb):
+        with tf.gfile.GFile(path_to_pb, 'rb') as f:
+            graph_def = tf.GraphDef()
+            graph_def.ParseFromString(f.read())
+        with tf.Graph().as_default() as graph:
+            tf.import_graph_def(graph_def, name='')
+            return graph
+    
+    # First from onnx to pb tf. doing this way instead of onnx-tf graph shit because jostain vitun syystä
+    # input ja output nimet ei toimi muuten??????? pitäiskö export_modelsissa tehdä tää?
+    model_onnx = onnx.load("models/{0}/{0}.onnx".format(name))
+    tf_rep = prepare(model_onnx, strict=strict)
+    tf_rep.export_graph('models/{0}/{0}.pb'.format(name))
+    tf_graph = load_pb("models/{0}/{0}.pb".format(name))
+    return tf_graph

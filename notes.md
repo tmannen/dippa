@@ -390,6 +390,32 @@ Dippa notes (image in gmail):
 - TODO WRITING: conv nets more about them, image of them too? look at matias paper thing?
 - TODO WRITING: link to other results, find more papers and see how they do it etc.
 
+## 09.03.2020
+
+- Main way to export from pt to tensorflow via onnx? https://github.com/onnx/onnx-tensorflow/blob/master/doc/API.md
+- ONNX can't handle multiple inputs/outputs well? https://towardsdatascience.com/converting-a-simple-deep-learning-model-from-pytorch-to-tensorflow-b6b353351f5d
+- interesting stuff about optimizing BERT for onnx runtime using original model from TF? https://github.com/onnx/tutorials/blob/master/tutorials/Inference-TensorFlow-Bert-Model-for-High-Performance-in-ONNX-Runtime.ipynb
+- peculiarity with pytorch resnet which causes problems in onnx to tf, mention this?
+- why from pt to tf: tf serving? mention in paper?
+- saved_model from onnx?: https://github.com/onnx/onnx-tensorflow/issues/490
+- if you import torch before tensorflow onnx thing you get segmentation fault? maybe some cuda reservation thing?
+- onnx-tf not event meant to be fast? https://github.com/onnx/onnx-tensorflow/issues/254. strict=False thing
+- "Some onnx-tensorflow cause problems blaablaa due to different operators jne. also pytorch resnet wrong actually kinda? some kind of padding shit"
+- new env for tf 1.15 because cba fiddling with cuda
+- TODO: tensorflow fully connected shit: https://github.com/onnx/onnx-tensorflow/issues/400? on purpose? onnx file erroneous have to fix somehow for tf?
+- TODO WRITING: "even the most simplest of models like a fully connected net failed to work in some cases, like onnx2tf some rank thing ^"
+- TODO WRITING: ?
+
+## 10.03.2020
+
+- SSD model from: https://pytorch.org/hub/nvidia_deeplearningexamples_ssd/ seems to work?
+- TODO: maybe tensorflow while loop later? low prio
+- TODO: onnxruntime imo very interesting
+- TODO: test image models with random imagenet inputs?
+- TODO: just get all the results now thta you can and make graphs?
+- TODO WRITING: mention script and trace based onnx export? https://pytorch.org/docs/stable/onnx.html. also other gotchas/things?
+- TODO: kysy antonilta miten merkitsisi kivasti graafissa että joku method puuttuu (joku ei toiminut tms.)
+- TODO: onnxruntime build test tomorrow keskiviikko bleh: maybe start here? https://github.com/Microsoft/onnxruntime/issues/237
 
 # Misc Notes
 
