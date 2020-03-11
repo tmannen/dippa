@@ -417,6 +417,21 @@ Dippa notes (image in gmail):
 - TODO: kysy antonilta miten merkitsisi kivasti graafissa että joku method puuttuu (joku ei toiminut tms.)
 - TODO: onnxruntime build test tomorrow keskiviikko bleh: maybe start here? https://github.com/Microsoft/onnxruntime/issues/237
 
+## 11.03.2020
+
+- TODO: muuta rakennetta results/experiment osio
+- TODO: kaikki results sitten experiments/discussions
+- backgroundiin: cnn:istä, 
+- TODO: CUDA vs CPU, tarvitseeko outputtia laittaa takaisin CPUhun, mitataanko sitä?
+- mainitsi tf conda env ja kaikki muut jutut
+- https://github.com/onnx/tutorials/blob/master/tutorials/Inference-PyTorch-Bert-Model-for-High-Performance-in-ONNX-Runtime.ipynb - example of testing accuracy?
+- TODO WRITING: enemmän onnxstä yleensä, esim. pytorch opsetit, jne.
+- model konversiolle ihan oma osio ja kertoo vaihtoehdoista? tosi hyvä imo
+- HMM onnxruntime ne backendit whatever, ainoastaan kiinnostaa niitten omat optimisaatiot ja ne on normi packagessa? kuitenkin onnistu onnxruntime build kun runnas update local ? tai sitten se --update --build: https://github.com/microsoft/onnxruntime/issues/1203
+- TODO cuda mismatch, reboot computer at work
+- TODO mainitise MMdnn, model convertor? : https://github.com/Microsoft/MMdnn
+- TODO: tensorflow cpu
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?
