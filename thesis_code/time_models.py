@@ -68,6 +68,8 @@ if __name__ == '__main__':
         model_path = os.path.join(model_root_path, model_file, model_file + ".onnx")
         outputs, inference_time = run_ngraph_inference(model_path, random_inputs, device)
     elif method == "tensorflow":
+        if device == "cpu":
+            os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
         from time_tensorflow import run_tensorflow1_inference
         model = utils.get_tensorflow1_graph_from_onnx(model_file)
         outputs, inference_time = run_tensorflow1_inference(model, random_inputs, "gpu")

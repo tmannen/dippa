@@ -427,10 +427,17 @@ Dippa notes (image in gmail):
 - https://github.com/onnx/tutorials/blob/master/tutorials/Inference-PyTorch-Bert-Model-for-High-Performance-in-ONNX-Runtime.ipynb - example of testing accuracy?
 - TODO WRITING: enemmän onnxstä yleensä, esim. pytorch opsetit, jne.
 - model konversiolle ihan oma osio ja kertoo vaihtoehdoista? tosi hyvä imo
-- HMM onnxruntime ne backendit whatever, ainoastaan kiinnostaa niitten omat optimisaatiot ja ne on normi packagessa? kuitenkin onnistu onnxruntime build kun runnas update local ? tai sitten se --update --build: https://github.com/microsoft/onnxruntime/issues/1203
+- HMM onnxruntime ne backendit whatever, ainoastaan kiinnostaa niitten omat optimisaatiot ja ne on normi packagessa? kuitenkin onnistu onnxruntime build kun runnas update local ? joutu myös jotain localea? tai sitten se --update --build: https://github.com/microsoft/onnxruntime/issues/1203
 - TODO cuda mismatch, reboot computer at work
 - TODO mainitise MMdnn, model convertor? : https://github.com/Microsoft/MMdnn
 - TODO: tensorflow cpu
+
+## 13.03.2020
+
+- Full ONNXruntime build command: ./build.sh --cudnn_home /usr/include --cuda_home /usr/local/cuda --use_tensorrt --tensorrt_home /l/software/TensorRT-7.0.0.11 --use_openvino CPU_FP32 --use_ngraph --use_dnnl --build_wheel --parallel --use_openmp (--update --build?)
+- TODO: write more about installation? weren't there some weird shit with openvino for example?
+- openvino mainitse siitä permission issuesta että varmaan kun itellä jännä sudo juttu jne? joutu laittaa homen uusiksi?
+- TODO kotona: TF kaikilla malleilla toimimaan, fully connected ainakin, jollain muullakin taisi olla jotain outuoa?
 
 # Misc Notes
 
