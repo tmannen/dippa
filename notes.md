@@ -449,6 +449,9 @@ Dippa notes (image in gmail):
 - ssd not working on openvino due to many output dimensions?
 - ssd not working on ngraph? ```RuntimeError: Assertion 'ng_inputs.at(1)->description() == "Constant"' failed at /root/ng/src/ngraph/frontend/onnx_import/op/reshape.cpp:50: <Node(Reshape): 523> doesn't support shape input of other type than Constant.```
 - fully connected needed 1, 784 input when exporting
+- TODO: onnx export se tracing thing!! kirjoita
+- https://pytorch.org/tutorials/advanced/super_resolution_with_onnxruntime.html "It is important to call torch_model.eval() or torch_model.train(False) before exporting the model, to turn the model to inference mode. This is required since operators like dropout or batchnorm behave differently in inference and training mode." vois mainita
+- TODO: koodit kaikkiin metodeihin, ehkä onnx runtime
 
 
 # Misc Notes
