@@ -14,7 +14,7 @@ def get_fully_connected():
         layers.Dropout(rate=0.5),
         layers.Dense(100),
         layers.Activation('relu'),
-        layers.Dense(10), asd
+        layers.Dense(10),
     ])
 
     return model
