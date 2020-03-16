@@ -25,15 +25,11 @@ def export_model(model, dir_path, name, opset_version, input_size):
     onnx_model_path = os.path.join(full_path, name + ".onnx")
     torch_model_path = os.path.join(full_path, name + ".pt")
     os.makedirs(full_path, exist_ok=True)
-    if name == "lstm":
-        _, x = lstm_prep()
-        input_size = "Variable"
-    else:
-        x = torch.randn(input_size, requires_grad=True)
+    x = torch.randn(input_size, requires_grad=True)
 
     model.eval()
-    torch.save(model, torch_model_path)
-    torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=opset_version)
+    #torch.save(model, torch_model_path)
+    torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=opset_version, input_names=['input'], output_names=['output'])
     save_metadata(model, name, full_path, input_size, opset_version)
 
 def lstm_prep():
@@ -88,29 +84,12 @@ def save_metadata(model, name, dir_path, input_size, onnx_opset):
 if __name__ == '__main__':
     args = argparse.ArgumentParser()
     args.add_argument('-path', type=str, default="/l/dippa_main/dippa/thesis_code/models/", help='Directory where models are saved.')
-    args.add_argument('-model_name', type=str, help='Name of the model, e.g. "resnet50"')
+    args.add_argument('-model', type=str, help='Name of the model, e.g. "resnet50"')
     args.add_argument('-opset', type=int, default=9, help='Which ONNX opset version to use')
     parser = args.parse_args()
-    model_name = parser.model_name
-    if model_name == "resnet50":
-        model = torchvision.models.resnet50(pretrained=True)
-        input_size = [1, 3, 224, 224]
-    elif model_name == "squeezenet":
-        model = torchvision.models.squeezenet1_0(pretrained=True)
-        input_size = [1, 3, 224, 224]
-    elif model_name == "lstm":
-        from model_definitions.lstm import LSTMTagger
-        model, _ = lstm_prep()
-        input_size = "Variable"
-    elif model_name == "yolo":
-        model = yolo.Darknet("model_definitions/config/yolov3.cfg")
-        model.load_darknet_weights("model_definitions/weights/yolov3.weights")
-        input_size = [1, 3, 224, 224]
-    elif model_name == "fully_connected":
-        model = fully_connected.FullyConnected()
-        input_size = [784]
-    elif model_name == "mobilenet":
-        model = torchvision.models.mobilenet_v2()
-        input_size = [1, 3, 224, 224]
-        
-    export_model(model, parser.path, parser.model_name, parser.opset, input_size)
+    model_name = parser.model
+    print("Initializing model {0}".format(model_name))
+    model, input_size = get_pytorch_model(model_name)
+    
+    print("Exporting model {0}".format(model_name))
+    export_model(model, parser.path, model_name, parser.opset, input_size)

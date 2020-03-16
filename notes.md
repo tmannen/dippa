@@ -366,6 +366,12 @@ Dippa notes (image in gmail):
 
 - TODO: mobilenet kaikilla malleilla, squeezenet myös tfllä?
 
+## 01.03.2020
+
+- torch model hub zoo? official? https://pytorch.org/docs/stable/model_zoo.html#module-torch.utils.model_zoo
+- TODO: fully connected ei toimi nyt openvinossa, joku shape juttu?
+- TODO: ngraph gpu?
+
 ## 02.03.2020
 
 - main q to answer: can I get an improvement using conversion tools?
@@ -382,6 +388,61 @@ Dippa notes (image in gmail):
 - ehkä aluksi ainakin tensorflowillakin vaan ne konvertoidut mallit.
 - tärkeä osa se että miten tulokset linkkautuu muuhun kirjallisuuteen eli kattele miten tulokset vertautuu muihin tuloksiin jne.
 - installation, konversio, measurements?
+## 06.03.2020
+
+- ONNX RUNTIME FOR REAL: https://venturebeat.com/2020/01/21/microsoft-open-sources-onnx-runtime-model-to-speed-up-googles-bert/
+- TODO WRITING: dynamic vs static computation graphs?
+- TODO WRITING: conv nets more about them, image of them too? look at matias paper thing?
+- TODO WRITING: link to other results, find more papers and see how they do it etc.
+
+## 09.03.2020
+
+- Main way to export from pt to tensorflow via onnx? https://github.com/onnx/onnx-tensorflow/blob/master/doc/API.md
+- ONNX can't handle multiple inputs/outputs well? https://towardsdatascience.com/converting-a-simple-deep-learning-model-from-pytorch-to-tensorflow-b6b353351f5d
+- interesting stuff about optimizing BERT for onnx runtime using original model from TF? https://github.com/onnx/tutorials/blob/master/tutorials/Inference-TensorFlow-Bert-Model-for-High-Performance-in-ONNX-Runtime.ipynb
+- peculiarity with pytorch resnet which causes problems in onnx to tf, mention this?
+- why from pt to tf: tf serving? mention in paper?
+- saved_model from onnx?: https://github.com/onnx/onnx-tensorflow/issues/490
+- if you import torch before tensorflow onnx thing you get segmentation fault? maybe some cuda reservation thing?
+- onnx-tf not event meant to be fast? https://github.com/onnx/onnx-tensorflow/issues/254. strict=False thing
+- "Some onnx-tensorflow cause problems blaablaa due to different operators jne. also pytorch resnet wrong actually kinda? some kind of padding shit"
+- new env for tf 1.15 because cba fiddling with cuda
+- TODO: tensorflow fully connected shit: https://github.com/onnx/onnx-tensorflow/issues/400? on purpose? onnx file erroneous have to fix somehow for tf?
+- TODO WRITING: "even the most simplest of models like a fully connected net failed to work in some cases, like onnx2tf some rank thing ^"
+- TODO WRITING: ?
+
+## 10.03.2020
+
+- SSD model from: https://pytorch.org/hub/nvidia_deeplearningexamples_ssd/ seems to work?
+- TODO: maybe tensorflow while loop later? low prio
+- TODO: onnxruntime imo very interesting
+- TODO: test image models with random imagenet inputs?
+- TODO: just get all the results now thta you can and make graphs?
+- TODO WRITING: mention script and trace based onnx export? https://pytorch.org/docs/stable/onnx.html. also other gotchas/things?
+- TODO: kysy antonilta miten merkitsisi kivasti graafissa että joku method puuttuu (joku ei toiminut tms.)
+- TODO: onnxruntime build test tomorrow keskiviikko bleh: maybe start here? https://github.com/Microsoft/onnxruntime/issues/237
+
+## 11.03.2020
+
+- TODO: muuta rakennetta results/experiment osio
+- TODO: kaikki results sitten experiments/discussions
+- backgroundiin: cnn:istä, 
+- TODO: CUDA vs CPU, tarvitseeko outputtia laittaa takaisin CPUhun, mitataanko sitä?
+- mainitsi tf conda env ja kaikki muut jutut
+- https://github.com/onnx/tutorials/blob/master/tutorials/Inference-PyTorch-Bert-Model-for-High-Performance-in-ONNX-Runtime.ipynb - example of testing accuracy?
+- TODO WRITING: enemmän onnxstä yleensä, esim. pytorch opsetit, jne.
+- model konversiolle ihan oma osio ja kertoo vaihtoehdoista? tosi hyvä imo
+- HMM onnxruntime ne backendit whatever, ainoastaan kiinnostaa niitten omat optimisaatiot ja ne on normi packagessa? kuitenkin onnistu onnxruntime build kun runnas update local ? joutu myös jotain localea? tai sitten se --update --build: https://github.com/microsoft/onnxruntime/issues/1203
+- TODO cuda mismatch, reboot computer at work
+- TODO mainitise MMdnn, model convertor? : https://github.com/Microsoft/MMdnn
+- TODO: tensorflow cpu
+
+## 13.03.2020
+
+- Full ONNXruntime build command: ./build.sh --cudnn_home /usr/include --cuda_home /usr/local/cuda --use_tensorrt --tensorrt_home /l/software/TensorRT-7.0.0.11 --use_openvino CPU_FP32 --use_ngraph --use_dnnl --build_wheel --parallel --use_openmp (--update --build?)
+- TODO: write more about installation? weren't there some weird shit with openvino for example?
+- openvino mainitse siitä permission issuesta että varmaan kun itellä jännä sudo juttu jne? joutu laittaa homen uusiksi?
+- TODO kotona: TF kaikilla malleilla toimimaan, fully connected ainakin, jollain muullakin taisi olla jotain outuoa?
 
 # Misc Notes
 
