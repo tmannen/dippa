@@ -376,13 +376,18 @@ Dippa notes (image in gmail):
 
 - main q to answer: can I get an improvement using conversion tools?
 - ottaisko tensorflowin original sourcena ja sitten kokeilisi conversiota siitä myös ja katsoo tuliko improvements.
-- kaksi osiota: Pytorch ja tensorflow?
+- kaksi osiota: Pytorch ja tensorflow? Ei ainakaan alussa.
 - tee warmup jokaisella toolilla
 - append vie paljon aikaa joten käytä predefined numpy array (note: ei pitäisi viedä)
 - TODO: add vgg-19, very large network with over 100 million parameters (shows gpu better for large ones?)
 - TODO: get flops as well in addition to nr of params? apparently flops might be better, but how to calculate?
 - https://github.com/onnx/onnx-tensorflow
 
+## 03.03.2020
+
+- ehkä aluksi ainakin tensorflowillakin vaan ne konvertoidut mallit.
+- tärkeä osa se että miten tulokset linkkautuu muuhun kirjallisuuteen eli kattele miten tulokset vertautuu muihin tuloksiin jne.
+- installation, konversio, measurements?
 ## 06.03.2020
 
 - ONNX RUNTIME FOR REAL: https://venturebeat.com/2020/01/21/microsoft-open-sources-onnx-runtime-model-to-speed-up-googles-bert/
