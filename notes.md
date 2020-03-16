@@ -439,6 +439,13 @@ Dippa notes (image in gmail):
 - openvino mainitse siitä permission issuesta että varmaan kun itellä jännä sudo juttu jne? joutu laittaa homen uusiksi?
 - TODO kotona: TF kaikilla malleilla toimimaan, fully connected ainakin, jollain muullakin taisi olla jotain outuoa?
 
+## 16.03.2020
+
+- ssd not working on openvino due to many output dimensions?
+- ssd not working on ngraph? ```RuntimeError: Assertion 'ng_inputs.at(1)->description() == "Constant"' failed at /root/ng/src/ngraph/frontend/onnx_import/op/reshape.cpp:50: <Node(Reshape): 523> doesn't support shape input of other type than Constant.```
+- fully connected needed 1, 784 input when exporting
+
+
 # Misc Notes
 
 how to test neural network inference speeds reliably? run 1000 images and take time? how to make sure other doesnt lazyload or something? maybe run first one image to make sure model is 'loaded' and then take the real test? maybe should also test how fast it 'compiles' or something?
