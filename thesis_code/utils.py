@@ -27,12 +27,13 @@ def save_results(path, engine, model, time, n, device):
         writer = csv.writer(f)
         writer.writerow(fields)
 
-def graph_results(results_path):
+def graph_results(results_path, exclude_models=None):
     # make a bar graph from results.csv? results has fields engine,model,time,n
     datas = pd.read_csv(results_path, header=None)
     datas.columns = ["method", "model", "time", "n", "device"] # Note: not needed if we add headers to csv
     datas['method'] = datas['method'] + " (" + datas['device'] + ")"
     sns.set(style="whitegrid")
+    datas = datas[~datas.model.isin(exclude_models)]
     g = sns.catplot(x="model", y="time", hue="method", data=datas, kind="bar")
     g.set_ylabels("Average time per single inference (milliseconds)")
     plt.show()
