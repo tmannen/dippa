@@ -26,7 +26,7 @@ def get_engine(onnx_file_path, engine_file_path, input_size, rebuild=True):
             # Parse model file
             if not os.path.exists(onnx_file_path):
                 print('ONNX file {} not found.'.format(onnx_file_path))
-                exit(0)
+                sys.exit(0)
             print('Loading ONNX file from path {}...'.format(onnx_file_path))
             with open(onnx_file_path, 'rb') as model:
                 print('Beginning ONNX file parsing')
@@ -36,7 +36,6 @@ def get_engine(onnx_file_path, engine_file_path, input_size, rebuild=True):
                         print (parser.get_error(error))
                     return None
             # The actual yolov3.onnx is generated with batch size 64. Reshape input to batch size 1
-            print("jee")
             network.get_input(0).shape = [max_batch_size] + input_size
             print('Completed parsing of ONNX file')
             print('Building an engine from file {}; this may take a while...'.format(onnx_file_path))
@@ -72,7 +71,7 @@ def run_tensorrt_inference(engine_file_path, random_inputs, onnx_file_path=None)
             inputs[0].host = random_inputs[i]
             # [0] ok since all our models have just one output? (or many outputs in terms of scalars, but not in terms of layers)
             out = common.do_inference_v2(context, bindings=bindings, inputs=inputs, outputs=outputs, stream=stream)
-            trt_outputs.append(out[0])
+            trt_outputs.append(np.array(out[0]))
 
         inference_time = (timer() - start)*1000 / n
         print(f'{name} inference time (msec): {inference_time:.5f}')

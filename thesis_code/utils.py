@@ -54,7 +54,7 @@ def get_pytorch_model(name):
         input_size = [1, 3, 224, 224]
         model = torchvision.models.squeezenet1_0(pretrained=True)
     elif name == "fully_connected":
-        input_size = [784]
+        input_size = [1, 784]
         model = fully_connected.FullyConnected()
     elif name == "vgg16":
         input_size = [1, 3, 224, 224]

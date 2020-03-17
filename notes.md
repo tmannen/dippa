@@ -201,7 +201,7 @@ Dippa notes (image in gmail):
 - TODO: take input size from config? lstm tensorrt not working properly. TODO: test first the lstm normal model itself, how does it actually work..? in pytorch
 - tensorflow also has quantizations and shit?: https://github.com/IntelAI/models/tree/master/benchmarks/image_recognition/tensorflow/resnet50
 - https://blog.tensorflow.org/2019/06/high-performance-inference-with-TensorRT.html tf seems to have good tensorrt integration ;(
-- TODO: jatka utils.timing thing. 
+- TODO: jatka utils.timing thing.
 
 ## 24.01.2020
 
@@ -452,6 +452,17 @@ Dippa notes (image in gmail):
 - TODO: onnx export se tracing thing!! kirjoita
 - https://pytorch.org/tutorials/advanced/super_resolution_with_onnxruntime.html "It is important to call torch_model.eval() or torch_model.train(False) before exporting the model, to turn the model to inference mode. This is required since operators like dropout or batchnorm behave differently in inference and training mode." vois mainita
 - TODO: koodit kaikkiin metodeihin, ehkä onnx runtime
+- NGRAPH doesn't work because: https://github.com/onnx/onnx/issues/981 ?
+
+## 17.03.2020
+
+- papers: TVM: https://www.usenix.org/system/files/osdi18-chen.pdf. ONNC some onnx compiler?: https://skymizer.com/publications/Skymizer-AICAS2019.pdf
+- onnxruntime can output optimized onnx: could be interesting to compare with normal model on netron for example?
+- most tools need np.float32 type?
+- TF/ONNX TF NOTES: many small warnings, write about these?
+- VGG16 not working because of some used padding? https://github.com/onnx/onnx-tensorflow/issues/167 cba fix?
+- write more about onnx: https://github.com/onnx/onnx/blob/master/docs/Overview.md also include that neat image IR etc.
+- TODO WRITING: add the timer loop? also recheck that theyre correct, the numpy copying thing?
 
 
 # Misc Notes
