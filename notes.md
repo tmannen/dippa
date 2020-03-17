@@ -463,6 +463,7 @@ Dippa notes (image in gmail):
 - VGG16 not working because of some used padding? https://github.com/onnx/onnx-tensorflow/issues/167 cba fix?
 - write more about onnx: https://github.com/onnx/onnx/blob/master/docs/Overview.md also include that neat image IR etc.
 - TODO WRITING: add the timer loop? also recheck that theyre correct, the numpy copying thing?
+- TODO WRITING: write about each thing the frameworks support?
 
 
 # Misc Notes
