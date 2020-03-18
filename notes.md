@@ -465,6 +465,16 @@ Dippa notes (image in gmail):
 - TODO WRITING: add the timer loop? also recheck that theyre correct, the numpy copying thing?
 - TODO WRITING: write about each thing the frameworks support?
 
+## 18.03.2020
+
+- TODO: lue enemmä dl compilation ja kirjoita juttua myös siitä? voisi aloittaa antonin niistä linkeistä
+- TODO: mainitse coreml ja muut mobile shitit
+- TODO: kiva kuva netronilla fully conencted mallista, onnx teksti myös? miltä näyttää? voisi näyttää minkälainen malli on.
+- apparently an onnx optimizer fug: https://github.com/onnx/onnx/blob/master/docs/PythonAPIOverview.md#optimizing-an-onnx-model
+- TODO: mainitse onnx se että esim. ei kannata pytorchissa assign johonkin silleen [] formaatilla koska ei voi trace jne?
+- TODO: automatic ml optimization things? voisi ainakin mainita?
+- TODO: netron model visu?
+
 
 # Misc Notes
 
