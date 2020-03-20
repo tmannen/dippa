@@ -475,6 +475,21 @@ Dippa notes (image in gmail):
 - TODO: automatic ml optimization things? voisi ainakin mainita?
 - TODO: netron model visu?
 
+## 19.03.2020
+
+- MEETING NOTES:
+- get that thesis description, kato siitä objective ja muuta? research problemiin (intro)
+- experiemnt goals/desc to intro?
+- results - aika per yksi inference? mittaa aika joka pred? timer ei ehkä niin jätä hitautta?
+- ONNX mainitaan myöhemmin kun siihen jo veerrataan interoperability osiossa - ONNX kuvaus ensin.
+- experiments
+- important thing to test: consistency!! että ei kauheaa varianssia inferencessä
+- intro tärkeää: antaa blueprintin koko työn tavallaan.
+
+## 20.03.2020
+
+- TODO WRITING: mainitse CUDNN myös ja CUDAn versiot prebuilttien kanssa ja sen vaikeus (esim tf haluaa 10.0 ja pt uusin 10.1)
+- ngraph koodipätkästä puuttuu inference?
 
 # Misc Notes
 
