@@ -19,6 +19,29 @@ flags.DEFINE_string('tfrecord', None, 'tfrecord instead of image')
 flags.DEFINE_string('output', './output.jpg', 'path to output image')
 flags.DEFINE_integer('num_classes', 80, 'number of classes in the model')
 
+def validate_all(model):
+    # Original 
+    methods = [("tensorflow", "gpu"),
+    ("tensorflow", "cpu"),
+    ("tensorrt", "gpu"),
+    ("openvino", "cpu"), 
+    ("ngraph", "cpu"), 
+    ("onnxruntime", "gpu"),
+    ]
+    pytorch_o, pytorch_t, pytorch_it = np.load("models/{model}/outputs/pytorch_gpu_outputs.npy".format(**locals()), allow_pickle=True)
+
+    for method, device in methods:
+        try:
+            o, t, it = np.load("models/{model}/outputs/{method}_{device}_outputs.npy".format(**locals()), allow_pickle=True)
+            if method in ["ngraph", "onnxruntime"]:
+                # ngraph and ort return nested lists in my implementation
+                o = [ou[0] for ou in o]
+
+            np.testing.assert_allclose(np.vstack(o), np.vstack(pytorch_o), rtol=1e-03, atol=1e-05)
+        except:
+            print("Couldn't load outputs from method {method} device {device}".format(**locals()))
+    
+
 def save_results(path, engine, model, time, n, device):
     # CSV with fields (engine, model, time, n)? appends to csv?
     save_path = os.path.join(path, "results.csv")
@@ -26,6 +49,11 @@ def save_results(path, engine, model, time, n, device):
     with open(save_path, 'a') as f:
         writer = csv.writer(f)
         writer.writerow(fields)
+
+def save_outputs(model_root_path, model_file, method, device, outputs, times, inference_time):
+    save_path = os.path.join(model_root_path, model_file, "outputs")
+    os.makedirs(save_path, exist_ok=True)
+    np.save(os.path.join(save_path, "_".join([method, device, "outputs"])), (outputs, times, inference_time), allow_pickle=True)
 
 def graph_results(results_path, exclude_models=None):
     # make a bar graph from results.csv? results has fields engine,model,time,n

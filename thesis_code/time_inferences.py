@@ -1,0 +1,1 @@
+# A single wrapper for all inference. takes in a function that provides inference for a single unit?

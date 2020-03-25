@@ -31,6 +31,7 @@ if __name__ == '__main__':
     method = args.method
     device = args.device
     input_size = [n] + args.input_size
+    np.random.seed(111)
     random_inputs = np.random.randn(*input_size).astype(np.float32)
     model_file = args.model
     if args.simplified:
@@ -40,10 +41,12 @@ if __name__ == '__main__':
     print("Running inference on {0} random inputs with model {1} and method {2} on device {3}".format(n, model_file, method, device))
     ### take the outputs of the original pytorch model here to compare the outputs.
     ### NOTE assumes the original was made with pytorch.
+    run_inference = None
     if method == "pytorch":
         from time_pytorch import run_pytorch_inference
         model, _ = utils.get_pytorch_model(args.model)
-        outputs, inference_time = run_pytorch_inference(model, random_inputs, device)
+        run_inference = run_pytorch_inference
+        #outputs, times, inference_time = run_pytorch_inference(model, random_inputs, device)
     elif method == "tensorflow2":
         from time_tensorflow import run_tensorflow_inference
         from model_definitions.yolo_tf.models import (YoloV3, YoloV3Tiny)
@@ -53,35 +56,45 @@ if __name__ == '__main__':
         if args.model in ["resnet50", "yolo", "squeezenet", "mobilenet", "ssd"]:
             random_inputs = np.swapaxes(random_inputs, 1, 3)
             random_inputs = np.swapaxes(random_inputs, 1, 2).astype(np.float32)
-        outputs, inference_time = run_tensorflow_inference(model, random_inputs, device)
+        run_inference = run_tensorflow_inference
     elif method == "tensorrt":
         from time_tensorrt import run_tensorrt_inference
         # TODO?: change so tensorrt_inference doesnt need onnx just infer it from .trt path it should be same named?
-        model_path = os.path.join(model_root_path, model_file, model_file + ".trt")
-        outputs, inference_time = run_tensorrt_inference(model_path, random_inputs, os.path.join(model_root_path, model_file, model_file + ".onnx"))
+        model = os.path.join(model_root_path, model_file, model_file + ".onnx")
+        run_inference = run_tensorrt_inference
     elif method == "openvino":
         from time_openvino import run_openvino_inference
-        model_path = os.path.join(model_root_path, model_file, model_file + ".xml")
-        outputs, inference_time = run_openvino_inference(model_path, random_inputs)
+        # Actually takes a path here, not a model. model created in function
+        model = os.path.join(model_root_path, model_file, model_file + ".xml")
+        run_inference = run_openvino_inference
     elif method == "ngraph":
         from time_ngraph import run_ngraph_inference
-        model_path = os.path.join(model_root_path, model_file, model_file + ".onnx")
-        outputs, inference_time = run_ngraph_inference(model_path, random_inputs, device)
+        # Actually takes a path here, not a model. model created in function
+        model = os.path.join(model_root_path, model_file, model_file + ".onnx")
+        run_inference = run_ngraph_inference
     elif method == "tensorflow":
         if device == "cpu":
-            os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+            os.environ['CUDA_VISIBLE_DEVICES'] = '-1' # when CUDA is not visible, CPU is used
         from time_tensorflow import run_tensorflow1_inference
         model = utils.get_tensorflow1_graph_from_onnx(model_file)
-        outputs, inference_time = run_tensorflow1_inference(model, random_inputs, "gpu")
+        run_inference = run_tensorflow1_inference
+    elif method == "onnxruntime":
+        from time_onnx_runtime import run_onnx_runtime_inference
+        model = os.path.join(model_root_path, model_file, model_file + ".onnx")
+        run_inference = run_onnx_runtime_inference
 
+    outputs, times, inference_time = run_inference(model, random_inputs, device)
     #pdb.set_trace()
-    ## TODO: tensorrt outputs to single point in memory and all, fix this later!
     if args.validate:
         original_model, _ = utils.get_pytorch_model(args.model)
-        original_outputs, _ = run_pytorch_inference(model, random_inputs)
-        original_outputs = np.vstack([o.flatten().cpu().numpy() for o in original_outputs])
+        print(outputs[0].shape)
+        from time_pytorch import run_pytorch_inference
+        original_outputs, _, _ = run_pytorch_inference(original_model, random_inputs, "cpu")
+        print(outputs[0].shape)
+        original_outputs = np.vstack(original_outputs)
         outputs = np.vstack(outputs)
         np.testing.assert_allclose(original_outputs, outputs, rtol=1e-03, atol=1e-05)
 
     if args.save:
         utils.save_results(model_root_path, method, args.model, str(inference_time), args.n, device)
+        utils.save_outputs(model_root_path, model_file, method, device, outputs, times, inference_time)

@@ -61,18 +61,26 @@ def run_openvino_inference(model_xml, inputs, device="CPU"):
     log.info("Loading model to the plugin")
     exec_net = ie.load_network(network=net, device_name=device)
     start = timer()
-    ov_outputs = []
+    outputs = []
+    times = []
     # Set host input to the image. The common.do_inference function will copy the input to the GPU before executing.
     log.info("Starting inference in synchronous mode")
+    # warmup:
+    for j in range(n//10):
+        exec_net.infer(inputs={input_blob: inputs[np.random.randint(0, n-1)]})
+
+    start = timer()
     for i in range(n):
         # [0] ok since all our models have just one output? (or many outputs in terms of scalars, but not in terms of layers)
+        prev = timer()
         out = exec_net.infer(inputs={input_blob: inputs[i]})
-        ov_outputs.append(out[out_blob])
+        outputs.append(out[out_blob])
+        times.append(timer() - prev)
 
     inference_time = (timer() - start)*1000 / n
     print(f'inference time (msec): {inference_time:.5f}')
     log.info("Batch size is {}".format(n))
-    return ov_outputs, inference_time
+    return outputs, times, inference_time
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
