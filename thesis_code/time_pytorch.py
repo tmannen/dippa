@@ -39,9 +39,10 @@ def run_pytorch_inference(model, random_inputs, device='cuda'):
         for i in range(n):
             prev = timer()
             if device == "cpu":
-                outputs.append(model(torch.from_numpy(random_inputs[i]).to(device)).numpy())
+                outputs.append(model(torch.from_numpy(random_inputs[i])).numpy())
             else:
                 outputs.append(model(torch.from_numpy(random_inputs[i]).to(device)).to("cpu").numpy())
+                torch.cuda.synchronize()
             times.append(timer() - prev)
     
     inference_time = (timer() - start)*1000 / n

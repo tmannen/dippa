@@ -29,7 +29,10 @@ def export_model(model, dir_path, name, opset_version, input_size):
 
     model.eval()
     #torch.save(model, torch_model_path)
-    torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=opset_version, input_names=['input'], output_names=['output'])
+    if "ssd" in model:
+        torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=opset_version, input_names=['input'], output_names=['output1', "output2"])
+    else:
+        torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=opset_version, input_names=['input'], output_names=['output'])
     save_metadata(model, name, full_path, input_size, opset_version)
 
 def lstm_prep():

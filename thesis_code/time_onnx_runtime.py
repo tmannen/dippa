@@ -14,6 +14,9 @@ def run_onnx_runtime_inference(model_onnx, inputs, device):
     times = []
 
     sess = rt.InferenceSession(model_onnx, sess_options=sess_options)
+    for j in range(n//10):
+        sess.run(['output'], {'input': inputs[np.random.randint(0, n-1)]})
+        
     start = timer()
     for i in range(n):
         prev = timer()

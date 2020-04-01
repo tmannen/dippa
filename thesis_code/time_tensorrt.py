@@ -20,7 +20,7 @@ def get_engine(onnx_file_path, engine_file_path, input_size, rebuild=True):
     def build_engine():
         """Takes an ONNX file and creates a TensorRT engine to run inference with"""
         with trt.Builder(TRT_LOGGER) as builder, builder.create_network(common.EXPLICIT_BATCH) as network, trt.OnnxParser(network, TRT_LOGGER) as parser:
-            builder.max_workspace_size = 1 << 31 # 2048MB?
+            builder.max_workspace_size = 1 << 30 # 4096MB?
             builder.max_batch_size = max_batch_size
             #builder.int8_mode = True
             # Parse model file
@@ -67,6 +67,12 @@ def run_tensorrt_inference(onnx_file_path, random_inputs, device):
         trt_outputs = []
         times = []
         start = timer()
+        # warmup
+        for i in range(n//10):
+            inputs[0].host = random_inputs[np.random.randint(0, n-1)]
+            # [0] ok since all our models have just one output? (or many outputs in terms of scalars, but not in terms of layers)
+            common.do_inference_v2(context, bindings=bindings, inputs=inputs, outputs=outputs, stream=stream)
+
         # Set host input to the image. The common.do_inference function will copy the input to the GPU before executing.
         for i in range(n):
             inputs[0].host = random_inputs[i]

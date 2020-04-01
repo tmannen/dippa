@@ -53,6 +53,8 @@ def save_results(path, engine, model, time, n, device):
 def save_outputs(model_root_path, model_file, method, device, outputs, times, inference_time):
     save_path = os.path.join(model_root_path, model_file, "outputs")
     os.makedirs(save_path, exist_ok=True)
+    if "ssd" in model_file and "torch" in method:
+        outputs = outputs[0] # get just the 4 outputs from pytorch for ssd
     np.save(os.path.join(save_path, "_".join([method, device, "outputs"])), (outputs, times, inference_time), allow_pickle=True)
 
 def graph_results(results_path, exclude_models=None):

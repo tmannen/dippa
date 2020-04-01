@@ -50,7 +50,7 @@ def run_openvino_inference(model_xml, inputs, device="CPU"):
             sys.exit(1)
 
     assert len(net.inputs.keys()) == 1, "Sample supports only single input topologies"
-    assert len(net.outputs) == 1, "Sample supports only single output topologies"
+    #assert len(net.outputs) == 1, "Sample supports only single output topologies"
 
     log.info("Preparing input blobs")
     input_blob = next(iter(net.inputs))
