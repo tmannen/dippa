@@ -31,8 +31,8 @@ def run_pytorch_inference(model, random_inputs, device='cuda'):
     outputs = []
     times = []
     # warmup:
-    for j in range(n//10):
-        model(torch.from_numpy(random_inputs[np.random.randint(0, n-1)]).to(device))
+    #for j in range(n//10):
+    #    model(torch.from_numpy(random_inputs[np.random.randint(0, n-1)]).to(device))
     start = timer()
     # If statement so we dont have extra if statements within loop. also copy back to cpu only if gpu is used
     with torch.no_grad():

@@ -29,7 +29,7 @@ def export_model(model, dir_path, name, opset_version, input_size):
 
     model.eval()
     #torch.save(model, torch_model_path)
-    if "ssd" in model:
+    if "ssd" in name:
         torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=opset_version, input_names=['input'], output_names=['output1', "output2"])
     else:
         torch.onnx.export(model, x, onnx_model_path, export_params=True, opset_version=opset_version, input_names=['input'], output_names=['output'])

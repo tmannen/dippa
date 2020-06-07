@@ -11,7 +11,7 @@ import utils
 #import utils
 from timeit import default_timer as timer
 
-TRT_LOGGER = trt.Logger(trt.Logger.INFO)
+TRT_LOGGER = trt.Logger(trt.Logger.VERBOSE)
 
 def get_engine(onnx_file_path, engine_file_path, input_size, rebuild=True):
     """Attempts to load a serialized engine if available, otherwise builds a new TensorRT engine and saves it."""

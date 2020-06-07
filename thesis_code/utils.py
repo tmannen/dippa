@@ -55,7 +55,7 @@ def save_outputs(model_root_path, model_file, method, device, outputs, times, in
     os.makedirs(save_path, exist_ok=True)
     if "ssd" in model_file and "torch" in method:
         outputs = outputs[0] # get just the 4 outputs from pytorch for ssd
-    np.save(os.path.join(save_path, "_".join([method, device, "outputs"])), (outputs, times, inference_time), allow_pickle=True)
+    np.save(os.path.join(save_path, "_".join([method, device, "outputs_nowarmup"])), (outputs, times, inference_time), allow_pickle=True)
 
 def graph_results(results_path, exclude_models=None):
     # make a bar graph from results.csv? results has fields engine,model,time,n
